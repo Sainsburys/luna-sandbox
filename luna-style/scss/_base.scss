@@ -1,3 +1,125 @@
-@import './base/scaffolding';
-@import './base/font-face';
-@import './base/headings';
+
+// Mary Ann Regular
+@font-face {
+  font-family: MaryAnn;
+  font-style: normal;
+  font-weight: 400;
+  src: url('#{$ln-assets-url}/fonts/mary_ann-regular.woff');
+}
+
+// Mary Ann Medium
+@font-face {
+  font-family: MaryAnn;
+  font-style: normal;
+  font-weight: 500;
+  src: url('#{$ln-assets-url}/fonts/mary_ann-medium.woff');
+}
+
+// Mary Ann Extrabold
+@font-face {
+  font-family: MaryAnn;
+  font-style: normal;
+  font-weight: 700;
+  src: url('#{$ln-assets-url}/fonts/mary_ann-extrabold.woff');
+}
+h1 {
+  @include ln-font(h1);
+}
+
+h2 {
+  @include ln-font(h2);
+}
+
+h3 {
+  @include ln-font(h3);
+}
+
+h4 {
+  @include ln-font(h4);
+}
+
+h5 {
+  @include ln-font(h5);
+}
+
+h6 {
+  @include ln-font(h6);
+}
+html {
+  font-size: 100%;
+  min-height: 100%;
+}
+
+body {
+  background: $ln-color-site-background;
+  color: $ln-color-base-text;
+  font-family: $ln-font-family-base;
+  line-height: map-get($ln-line-heights, $ln-line-height-base);
+
+  @each $key, $value in map-get($ln-font-sizes, $ln-font-size-base) {
+    @if $key == 'def' {
+      font-size: $value;
+    }
+
+    @else {
+      /* stylelint-disable-next-line max-nesting-depth */
+      @include ln-respond-to($key) {
+        font-size: $value;
+      }
+    }
+  }
+}
+
+a {
+  color: $ln-color-links;
+
+  &:hover,
+  &:focus {
+    color: $ln-color-alpha-dark;
+  }
+}
+
+hr {
+  // Set hr styling to match site-wide border styles.
+  border: 0;
+  border-bottom: 1px solid $ln-color-base-border;
+}
+
+/**
+ * Where `margin-bottom` is concerned, this value will be the same as the
+ * base line-height. This allows us to keep a consistent vertical rhythm.
+ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hgroup,
+ul,
+ol,
+dl,
+blockquote,
+p,
+address,
+table,
+legend,
+figure,
+pre,
+hr {
+  @include ln-push-bottom;
+}
+
+/**
+ * Where `margin-left` is concerned we want to try and indent certain elements
+ * by a consistent amount.
+ */
+ul,
+ol,
+dd {
+  margin-left: $ln-space-x2;
+}
+
+::placeholder {
+  color: $ln-color-grey;
+}

@@ -1,7 +1,0 @@
-$true-terminal-output: true;
-$ln-tests-enabled: true;
-
-@import 'node_modules/sass-true/sass/true';
-@import 'main';
-
-@include report;

@@ -1,9 +1,0 @@
-@if $use-ln-striped {
-  .ln-c-striped > *:nth-child(odd) {
-    background: $ln-color-grey-v-light;
-  }
-
-  .ln-c-striped-rev > *:nth-child(even) {
-    background: $ln-color-grey-v-light;
-  }
-}

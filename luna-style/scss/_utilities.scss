@@ -1,11 +1,959 @@
-@import './utilities/widths';
-@import './utilities/push';
-@import './utilities/pull';
-@import './utilities/margins';
-@import './utilities/padding';
-@import './utilities/typography';
-@import './utilities/borders';
-@import './utilities/layout';
-@import './utilities/flexbox';
-@import './utilities/colors';
-@import './utilities/misc';
+////
+/// @group utilities/border
+////
+
+@if $use-ln-border {
+/* stylelint-disable */
+/// Adds a border using `$ln-color-base-border`.
+/// @name Border
+/// @example markup
+///   <div class="ln-u-soft ln-u-border">ln-u-border</div>
+/// @example markup
+///   <div class="ln-u-soft ln-u-border-top">ln-u-border-top</div>
+/// @example markup
+///   <div class="ln-u-soft ln-u-border-right">ln-u-border-right</div>
+/// @example markup
+///   <div class="ln-u-soft ln-u-border-bottom">ln-u-border-bottom</div>
+/// @example markup
+///   <div class="ln-u-soft ln-u-border-left">ln-u-border-left</div>
+/// @example markup
+///   <div class="ln-u-soft ln-u-border-sides">ln-u-border-sides</div>
+/// @example markup
+///   <div class="ln-u-soft ln-u-border-ends">ln-u-border-ends</div>
+/* stylelint-enable */
+  .ln-u-border {
+    border: 1px solid $ln-color-base-border !important;
+  }
+
+  .ln-u-border-top {
+    border-top: 1px solid $ln-color-base-border !important;
+  }
+
+  .ln-u-border-right {
+    border-right: 1px solid $ln-color-base-border !important;
+  }
+
+  .ln-u-border-bottom {
+    border-bottom: 1px solid $ln-color-base-border !important;
+  }
+
+  .ln-u-border-left {
+    border-left: 1px solid $ln-color-base-border !important;
+  }
+
+  .ln-u-border-sides {
+    border-left: 1px solid $ln-color-base-border !important;
+    border-right: 1px solid $ln-color-base-border !important;
+  }
+
+  .ln-u-border-ends {
+    border-bottom: 1px solid $ln-color-base-border !important;
+    border-top: 1px solid $ln-color-base-border !important;
+  }
+}
+
+@if $use-ln-clean {
+/* stylelint-disable */
+/// Removes borders from an element.
+/// @name Clean
+/// @example markup
+///   <div class="ln-u-soft ln-u-border ln-u-clean">ln-u-clean</div>
+/// @example markup
+///   <div class="ln-u-soft ln-u-border ln-u-clean-top">ln-u-clean-top</div>
+/// @example markup
+///   <div class="ln-u-soft ln-u-border ln-u-clean-right">ln-u-clean-right</div>
+/// @example markup
+///   <div class="ln-u-soft ln-u-border ln-u-clean-bottom">ln-u-clean-bottom</div>
+/// @example markup
+///   <div class="ln-u-soft ln-u-border ln-u-clean-left">ln-u-clean-left</div>
+/// @example markup
+///   <div class="ln-u-soft ln-u-border ln-u-clean-sides">ln-u-clean-sides</div>
+/// @example markup
+///   <div class="ln-u-soft ln-u-border ln-u-clean-ends">ln-u-clean-ends</div>
+/* stylelint-enable */
+  .ln-u-clean {
+    border: 0 !important;
+  }
+
+  .ln-u-clean-top {
+    border-top: 0 !important;
+  }
+
+  .ln-u-clean-right {
+    border-right: 0 !important;
+  }
+
+  .ln-u-clean-bottom {
+    border-bottom: 0 !important;
+  }
+
+  .ln-u-clean-sides {
+    border-left: 0 !important;
+    border-right: 0 !important;
+  }
+
+  .ln-u-clean-ends {
+    border-bottom: 0 !important;
+    border-top: 0 !important;
+  }
+}
+////
+/// @group utilities/colours
+////
+
+@each $key, $value in $ln-colors {
+/* stylelint-disable */
+/// Sets the `color` to match a key existing in `$ln-colors`
+/// @name Text colour
+/// @example markup
+///   <div class="ln-u-soft ln-u-color-orange">ln-u-color-orange</div>
+/* stylelint-enable */
+  @if $use-ln-colors {
+    .ln-u-color-#{$key} {
+      color: $value !important;
+    }
+  }
+
+/* stylelint-disable */
+/// Sets the `background-color` to match a key existing in `$ln-colors`
+/// @name Background colour
+/// @example markup
+///   <div class="ln-u-soft ln-u-color-white ln-u-bg-color-orange-dark">ln-u-bg-color-orange-dark</div>
+/* stylelint-enable */
+  @if $use-ln-bg-colors {
+    .ln-u-bg-color-#{$key} {
+      background-color: $value !important;
+    }
+  }
+}
+
+@each $key, $value in $ln-colors-theming {
+/* stylelint-disable */
+/// Sets the `color` to match a key existing in `$ln-colors-theming`
+/// @name Text colour
+/// @example markup
+///   <div class="ln-u-soft ln-u-color-orange">ln-u-color-alpha</div>
+/* stylelint-enable */
+  @if $use-ln-colors {
+    .ln-u-color-#{$key} {
+      color: $value !important;
+    }
+  }
+/* stylelint-disable */
+/// Sets the `background-color` to match a key existing in `$ln-colors-theming`
+/// @name Background colour
+/// @example markup
+///   <div class="ln-u-soft ln-u-color-white ln-u-bg-color-beta-dark">ln-u-bg-color-orange-dark</div>
+/* stylelint-enable */
+  @if $use-ln-bg-colors {
+    .ln-u-bg-color-#{$key} {
+      background-color: $value !important;
+    }
+  }
+}
+////
+/// @group utilities/flexbox
+////
+
+@if $use-ln-flexbox {
+/* stylelint-disable */
+/// Direction of flex items
+/// @name Direction
+/* stylelint-enable */
+  .ln-u-flex-direction-row { flex-direction: row !important; }
+  .ln-u-flex-direction-row-reverse { flex-direction: row-reverse !important; }
+  .ln-u-flex-direction-col { flex-direction: column !important; }
+  .ln-u-flex-direction-col-reverse { flex-direction: column-reverse !important; }
+
+/* stylelint-disable */
+/// Flex items wrap
+/// @name Wrap
+/* stylelint-enable */
+  .ln-u-flex-wrap-nowrap { flex-wrap: nowrap !important; }
+  .ln-u-flex-wrap { flex-wrap: wrap !important; }
+  .ln-u-flex-wrap-reverse { flex-wrap: wrap-reverse !important; }
+
+/* stylelint-disable */
+/// Flex items positioning along the container's main axis
+/// @name Justify content
+/* stylelint-enable */
+  .ln-u-justify-content-flex-start { justify-content: flex-start !important; }
+  .ln-u-justify-content-center { justify-content: center !important; }
+  .ln-u-justify-content-flex-end { justify-content: flex-end !important; }
+  .ln-u-justify-content-space-between { justify-content: space-between !important; }
+  .ln-u-justify-content-space-around { justify-content: space-around !important; }
+
+/* stylelint-disable */
+/// Flex items positioning along the container's cross axis
+/// @name Align items
+/* stylelint-enable */
+  .ln-u-align-items-stretch { align-items: stretch !important; }
+  .ln-u-align-items-flex-start { align-items: flex-start !important; }
+  .ln-u-align-items-center { align-items: center !important; }
+  .ln-u-align-items-flex-end { align-items: flex-end !important; }
+  .ln-u-align-items-baseline { align-items: baseline !important; }
+
+/* stylelint-disable */
+/// Individual flex item positioning along the container's cross axis
+/// @name Align self
+/* stylelint-enable */
+  .ln-u-align-self-auto { align-self: auto !important; }
+  .ln-u-align-self-flex-start { align-self: flex-start !important; }
+  .ln-u-align-self-center { align-self: center !important; }
+  .ln-u-align-self-flex-end { align-self: flex-end !important; }
+  .ln-u-align-self-stretch { align-self: stretch !important; }
+
+/* stylelint-disable */
+/// Controls how flex items grow and shrink
+/// @name Flex, grow & shrink
+/* stylelint-enable */
+  .ln-u-flex-initial { flex: initial !important; }
+  .ln-u-flex-1 { flex: 1 !important; }
+  .ln-u-flex-auto { flex: auto !important; }
+  .ln-u-flex-none { flex: none !important; }
+  .ln-u-flex-grow { flex-grow: 1 !important; }
+  .ln-u-flex-shrink { flex-shrink: 1 !important; }
+  .ln-u-flex-grow-none { flex-grow: 0 !important; }
+  .ln-u-flex-shrink-none { flex-shrink: 0 !important; }
+}
+////
+/// @group utilities/layout
+////
+@mixin ln-u-display-build-utility($display-value) {
+  .ln-u-display-#{$display-value} {
+    display: $display-value !important;
+  }
+
+  /* stylelint-disable max-nesting-depth */
+  @if $use-ln-display-responsive {
+    @each $key, $value in $ln-breakpoints {
+      .ln-u-display-#{$display-value}\@#{$key} {
+        @include ln-respond-to('min-#{$key}') {
+          display: $display-value !important;
+        }
+      }
+    }
+  }
+  /* stylelint-enable max-nesting-depth */
+}
+
+@if $use-ln-display {
+/* stylelint-disable */
+/// Offers all `display:` properties as a standard utility class and also responsive variant
+/// @name Display
+/// @example markup
+///   <div class="ln-u-display-none ln-u-display-block@md">
+///     Hidden for small divices but visible on medium screens
+///   </div>
+/* stylelint-enable */
+  $display-values: none, inline, inline-block, block, table, table-cell, table-row, flex, inline-flex;
+
+  @each $display-value in $display-values {
+    @include ln-u-display-build-utility($display-value);
+  }
+}
+
+@if $use-ln-center-block {
+/* stylelint-disable */
+/// Centers the element by adding `auto` to the horizontal margins
+/// @name Center block
+/// @example markup
+///   <div class="ln-u-display-center-block">Center block</div>
+/* stylelint-enable */
+  .ln-u-center-block {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+////
+/// @group utilities/margins
+////
+
+@if $use-ln-push {
+/* stylelint-disable */
+/// Adds `$ln-scaled-space` margin to the specified side which changes in
+/// relation to the device breakpoint, with variants of `$ln-scaled-space`
+/// available.
+/// @name Push
+/// @example markup - Default
+///   <div class="ln-u-push">ln-u-push</div>
+///   <div class="ln-u-push-top">ln-u-push-top</div>
+///   <div class="ln-u-push-right">ln-u-push-right</div>
+///   <div class="ln-u-push-bottom">ln-u-push-bottom</div>
+///   <div class="ln-u-push-left">ln-u-push-bottom</div>
+///   <div class="ln-u-push-sides">ln-u-push-sides</div>
+///   <div class="ln-u-push-ends">ln-u-push-ends</div>
+/// @example markup - 1 / 2 x spacing unit
+///   <div class="ln-u-push*1/2">ln-u-push*1/2</div>
+///   <div class="ln-u-push-top*1/2">ln-u-push-top*1/2</div>
+///   <div class="ln-u-push-right*1/2">ln-u-push-right*1/2</div>
+///   <div class="ln-u-push-bottom*1/2">ln-u-push-bottom*1/2</div>
+///   <div class="ln-u-push-left*1/2">ln-u-push-bottom*1/2</div>
+///   <div class="ln-u-push-sides*1/2">ln-u-push-sides*1/2</div>
+///   <div class="ln-u-push-ends*1/2">ln-u-push-ends*1/2</div>
+/// @example markup - 2 x spacing unit
+///   <div class="ln-u-push*2">ln-u-push*2</div>
+///   <div class="ln-u-push-top*2">ln-u-push-top*2</div>
+///   <div class="ln-u-push-right*2">ln-u-push-right*2</div>
+///   <div class="ln-u-push-bottom*2">ln-u-push-bottom*2</div>
+///   <div class="ln-u-push-left*2">ln-u-push-bottom*2</div>
+///   <div class="ln-u-push-sides*2">ln-u-push-sides*2</div>
+///   <div class="ln-u-push-ends*2">ln-u-push-ends*2</div>
+/// @example markup - 3 x spacing unit
+///   <div class="ln-u-push*3">ln-u-push*3</div>
+///   <div class="ln-u-push-top*3">ln-u-push-top*3</div>
+///   <div class="ln-u-push-right*3">ln-u-push-right*3</div>
+///   <div class="ln-u-push-bottom*3">ln-u-push-bottom*3</div>
+///   <div class="ln-u-push-left*3">ln-u-push-bottom*3</div>
+///   <div class="ln-u-push-sides*3">ln-u-push-sides*3</div>
+///   <div class="ln-u-push-ends*3">ln-u-push-ends*3</div>
+/// @example markup - 4 x spacing unit
+///   <div class="ln-u-push*4">ln-u-push*4</div>
+///   <div class="ln-u-push-top*4">ln-u-push-top*4</div>
+///   <div class="ln-u-push-right*4">ln-u-push-right*4</div>
+///   <div class="ln-u-push-bottom*4">ln-u-push-bottom*4</div>
+///   <div class="ln-u-push-left*4">ln-u-push-bottom*4</div>
+///   <div class="ln-u-push-sides*4">ln-u-push-sides*4</div>
+///   <div class="ln-u-push-ends*4">ln-u-push-ends*4</div>
+/* stylelint-enable */
+  @each $key, $value in $ln-scaled-space {
+    $suffix: '';
+
+    @if ($key != 'def') { $suffix: '-#{$key}'; }
+
+    .ln-u-push#{$suffix} {
+      @include ln-push($key, true);
+    }
+
+    .ln-u-push-top#{$suffix} {
+      @include ln-push-top($key, true);
+    }
+
+    .ln-u-push-right#{$suffix} {
+      @include ln-push-right($key, true);
+    }
+
+    .ln-u-push-bottom#{$suffix} {
+      @include ln-push-bottom($key, true);
+    }
+
+    .ln-u-push-left#{$suffix} {
+      @include ln-push-left($key, true);
+    }
+
+    .ln-u-push-sides#{$suffix} {
+      @include ln-push-sides($key, true);
+    }
+
+    .ln-u-push-ends#{$suffix} {
+      @include ln-push-ends($key, true);
+    }
+  }
+}
+
+@if $use-ln-flush {
+/* stylelint-disable */
+/// Removes any margin from the specified side
+/// @name Flush
+/// @example markup
+///   <div class="ln-u-flush">ln-u-flush</div>
+///   <div class="ln-u-flush-top">ln-u-flush-top</div>
+///   <div class="ln-u-flush-right">ln-u-flush-right</div>
+///   <div class="ln-u-flush-bottom">ln-u-flush-bottom</div>
+///   <div class="ln-u-flush-left">ln-u-flush-bottom</div>
+///   <div class="ln-u-flush-sides">ln-u-flush-sides</div>
+///   <div class="ln-u-flush-ends">ln-u-flush-ends</div>
+/* stylelint-enable */
+  .ln-u-flush {
+    margin: 0 !important;
+  }
+
+  .ln-u-flush-top {
+    margin-top: 0 !important;
+  }
+
+  .ln-u-flush-right {
+    margin-right: 0 !important;
+  }
+
+  .ln-u-flush-bottom {
+    margin-bottom: 0 !important;
+  }
+
+  .ln-u-flush-left {
+    margin-left: 0 !important;
+  }
+
+  .ln-u-flush-sides {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .ln-u-flush-ends {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+}
+
+@if $use-ln-margin {
+/* stylelint-disable */
+/// Adds `$ln-fixed-space` margin to the specified side which matches a
+/// the `$ln-space` value, with multiplier variations available.
+/// @name Margin
+/// @example markup - Default
+///   <div class="ln-u-margin">ln-u-margin</div>
+///   <div class="ln-u-margin-top">ln-u-margin-top</div>
+///   <div class="ln-u-margin-right">ln-u-margin-right</div>
+///   <div class="ln-u-margin-bottom">ln-u-margin-bottom</div>
+///   <div class="ln-u-margin-left">ln-u-margin-bottom</div>
+///   <div class="ln-u-margin-sides">ln-u-margin-sides</div>
+///   <div class="ln-u-margin-ends">ln-u-margin-ends</div>
+/// @example markup - 1/2 * ln-space
+///   <div class="ln-u-margin*1/2">ln-u-margin*1/2</div>
+/// @example markup - 2 * ln-space
+///   <div class="ln-u-margin*2">ln-u-margin*2</div>
+/// @example markup - 3 * ln-space
+///   <div class="ln-u-margin*3">ln-u-margin*3</div>
+/// @example markup - 4 * ln-space
+///   <div class="ln-u-margin*4">ln-u-margin*4</div>
+/* stylelint-enable */
+  @each $key, $value in $ln-fixed-space {
+    $suffix: '';
+
+    @if ($key != 'def') { $suffix: '#{$key}'; }
+
+    .ln-u-margin#{$suffix} {
+      margin: $value !important;
+    }
+
+    .ln-u-margin-top#{$suffix} {
+      margin-top: $value !important;
+    }
+
+    .ln-u-margin-right#{$suffix} {
+      margin-right: $value !important;
+    }
+
+    .ln-u-margin-bottom#{$suffix} {
+      margin-bottom: $value !important;
+    }
+
+    .ln-u-margin-left#{$suffix} {
+      margin-left: $value !important;
+    }
+
+    .ln-u-margin-sides#{$suffix} {
+      margin-left: $value !important;
+      margin-right: $value !important;
+    }
+
+    .ln-u-margin-ends#{$suffix} {
+      margin-bottom: $value !important;
+      margin-top: $value !important;
+    }
+  }
+}
+@if $use-ln-hidden {
+/* stylelint-disable */
+/// Adds `display: none;` to an element so it is hidden for all users
+/// @name Hidden
+/// @group utilities/display
+/// @example markup
+///   <div class="ln-u-hidden">I'm hidden</div>
+/* stylelint-enable */
+  .ln-u-hidden {
+    display: none !important;
+  }
+}
+
+@if $use-ln-visually-hidden {
+/* stylelint-disable */
+/// Visually hides an element whilst ensuring the content will still be read out by screen readers.
+/// @name Visually hidden
+/// @group utilities/display
+/// @example markup
+///   <div class="ln-u-visually-hidden">Only screen readers will get this</div>
+/* stylelint-enable */
+  .ln-u-visually-hidden {
+    @include ln-visually-hidden(true);
+  }
+}
+
+@if $use-ln-circle {
+/* stylelint-disable */
+/// Adds `border-radius` to an element to change it's shape
+/// @group utilities/misc
+/// @example markup
+///   <div class="ln-u-display-inline-block ln-u-soft ln-u-bg-color-orange ln-u-circle"></div>
+/* stylelint-enable */
+  .ln-u-circle {
+    border-radius: 1000px !important;
+  }
+}
+
+@if $use-ln-ellipsis {
+/* stylelint-disable */
+/// Adds ellipsis to highlight that text content has been cut off due to the constraints of the container
+/// @group utilities/misc
+/// @example markup
+///   <div class="ln-u-ellipsis">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eu diam quis turpis egestas elementum.</div>
+/* stylelint-enable */
+  .ln-u-ellipsis {
+    display: block !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+}
+
+@if $use-ln-fill-height {
+/* stylelint-disable */
+/// Expands the element to the full height of it's container
+/// @group utilities/misc
+/// @example markup
+///   <div class="ln-u-fill-height"></div>
+/* stylelint-enable */
+  .ln-u-fill-height {
+    height: 100%;
+  }
+}
+////
+/// @group utilities/padding
+////
+
+@if $use-ln-soft {
+/* stylelint-disable */
+/// Adds `$ln-scaled-space` padding to the specified side which changes in
+/// relation to the device breakpoint, with variants of `$ln-scaled-space`
+/// available.
+/// @name Soft
+/// @example markup - Default
+///   <div class="ln-u-soft">ln-u-soft</div>
+///   <div class="ln-u-soft-top">ln-u-soft-top</div>
+///   <div class="ln-u-soft-right">ln-u-soft-right</div>
+///   <div class="ln-u-soft-bottom">ln-u-soft-bottom</div>
+///   <div class="ln-u-soft-left">ln-u-soft-bottom</div>
+///   <div class="ln-u-soft-sides">ln-u-soft-sides</div>
+///   <div class="ln-u-soft-ends">ln-u-soft-ends</div>
+/// @example markup - sm
+///   <div class="ln-u-soft-sm">ln-u-soft-sm</div>
+/// @example markup - lg
+///   <div class="ln-u-soft-lg">ln-u-soft-lg</div>
+/// @example markup - xl
+///   <div class="ln-u-soft-xl">ln-u-soft-xl</div>
+/* stylelint-enable */
+  @each $key, $value in $ln-scaled-space {
+    $suffix: '';
+
+    @if ($key != 'def') { $suffix: '-#{$key}'; }
+
+    .ln-u-soft#{$suffix} {
+      @include ln-soft($key, true);
+    }
+
+    .ln-u-soft-top#{$suffix} {
+      @include ln-soft-top($key, true);
+    }
+
+    .ln-u-soft-right#{$suffix} {
+      @include ln-soft-right($key, true);
+    }
+
+    .ln-u-soft-bottom#{$suffix} {
+      @include ln-soft-bottom($key, true);
+    }
+
+    .ln-u-soft-left#{$suffix} {
+      @include ln-soft-left($key, true);
+    }
+
+    .ln-u-soft-sides#{$suffix} {
+      @include ln-soft-sides($key, true);
+    }
+
+    .ln-u-soft-ends#{$suffix} {
+      @include ln-soft-ends($key, true);
+    }
+  }
+}
+
+@if $use-ln-hard {
+/* stylelint-disable */
+/// Removes any padding from the specified side
+/// @name Hard
+/// @example markup
+///   <div class="ln-u-hard">ln-u-hard</div>
+///   <div class="ln-u-hard-top">ln-u-hard-top</div>
+///   <div class="ln-u-hard-right">ln-u-hard-right</div>
+///   <div class="ln-u-hard-bottom">ln-u-hard-bottom</div>
+///   <div class="ln-u-hard-left">ln-u-hard-bottom</div>
+///   <div class="ln-u-hard-sides">ln-u-hard-sides</div>
+///   <div class="ln-u-hard-ends">ln-u-hard-ends</div>
+/* stylelint-enable */
+  .ln-u-hard {
+    padding: 0 !important;
+  }
+
+  .ln-u-hard-top {
+    padding-top: 0 !important;
+  }
+
+  .ln-u-hard-right {
+    padding-right: 0 !important;
+  }
+
+  .ln-u-hard-bottom {
+    padding-bottom: 0 !important;
+  }
+
+  .ln-u-hard-left {
+    padding-left: 0 !important;
+  }
+
+  .ln-u-hard-sides {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .ln-u-hard-ends {
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+  }
+}
+
+@if $use-ln-padding {
+/* stylelint-disable */
+/// Adds `$ln-fixed-space` padding to the specified side which matches a
+/// the `$ln-space` value, with multiplier variations available.
+/// @name Padding
+/// @example markup - Default
+///   <div class="ln-u-padding">ln-u-padding</div>
+///   <div class="ln-u-padding-top">ln-u-padding-top</div>
+///   <div class="ln-u-padding-right">ln-u-padding-right</div>
+///   <div class="ln-u-padding-bottom">ln-u-padding-bottom</div>
+///   <div class="ln-u-padding-left">ln-u-padding-bottom</div>
+///   <div class="ln-u-padding-sides">ln-u-padding-sides</div>
+///   <div class="ln-u-padding-ends">ln-u-padding-ends</div>
+/// @example markup - 1/2 * ln-space
+///   <div class="ln-u-padding*1/2">ln-u-padding*1/2</div>
+/// @example markup - 2 * ln-space
+///   <div class="ln-u-padding*2">ln-u-padding*2</div>
+/// @example markup - 3 * ln-space
+///   <div class="ln-u-padding*3">ln-u-padding*3</div>
+/// @example markup - 4 * ln-space
+///   <div class="ln-u-padding*4">ln-u-padding*4</div>
+/* stylelint-enable */
+  @each $key, $value in $ln-fixed-space {
+    $suffix: '';
+
+    @if ($key != 'def') { $suffix: '#{$key}'; }
+
+    .ln-u-padding#{$suffix} {
+      padding: $value !important;
+    }
+
+    .ln-u-padding-top#{$suffix} {
+      padding-top: $value !important;
+    }
+
+    .ln-u-padding-right#{$suffix} {
+      padding-right: $value !important;
+    }
+
+    .ln-u-padding-bottom#{$suffix} {
+      padding-bottom: $value !important;
+    }
+
+    .ln-u-padding-left#{$suffix} {
+      padding-left: $value !important;
+    }
+
+    .ln-u-padding-sides#{$suffix} {
+      padding-left: $value !important;
+      padding-right: $value !important;
+    }
+
+    .ln-u-padding-ends#{$suffix} {
+      padding-bottom: $value !important;
+      padding-top: $value !important;
+    }
+  }
+}
+$pull-fractions: (
+  (ln-u-pull-1\/1, 1, $use-ln-pull-1-1),
+  (ln-u-pull-1\/2, 1/2, $use-ln-pull-1-2),
+  (ln-u-pull-1\/3, 1/3, $use-ln-pull-1-3),
+  (ln-u-pull-2\/3, 2/3, $use-ln-pull-2-3),
+  (ln-u-pull-1\/4, 1/4, $use-ln-pull-1-4),
+  (ln-u-pull-2\/4, 2/4, $use-ln-pull-2-4),
+  (ln-u-pull-3\/4, 3/4, $use-ln-pull-3-4),
+  (ln-u-pull-1\/5, 1/5, $use-ln-pull-1-5),
+  (ln-u-pull-2\/5, 2/5, $use-ln-pull-2-5),
+  (ln-u-pull-3\/5, 3/5, $use-ln-pull-3-5),
+  (ln-u-pull-4\/5, 4/5, $use-ln-pull-4-5),
+  (ln-u-pull-1\/6, 1/6, $use-ln-pull-1-6),
+  (ln-u-pull-2\/6, 2/6, $use-ln-pull-2-6),
+  (ln-u-pull-3\/6, 3/6, $use-ln-pull-3-6),
+  (ln-u-pull-4\/6, 4/6, $use-ln-pull-4-6),
+  (ln-u-pull-5\/6, 5/6, $use-ln-pull-5-6),
+  (ln-u-pull-1\/8, 1/8, $use-ln-pull-1-8),
+  (ln-u-pull-2\/8, 2/8, $use-ln-pull-2-8),
+  (ln-u-pull-3\/8, 3/8, $use-ln-pull-3-8),
+  (ln-u-pull-4\/8, 4/8, $use-ln-pull-4-8),
+  (ln-u-pull-5\/8, 5/8, $use-ln-pull-5-8),
+  (ln-u-pull-6\/8, 6/8, $use-ln-pull-6-8),
+  (ln-u-pull-7\/8, 7/8, $use-ln-pull-7-8),
+  (ln-u-pull-1\/10, 1/10, $use-ln-pull-1-10),
+  (ln-u-pull-2\/10, 2/10, $use-ln-pull-2-10),
+  (ln-u-pull-3\/10, 3/10, $use-ln-pull-3-10),
+  (ln-u-pull-4\/10, 4/10, $use-ln-pull-4-10),
+  (ln-u-pull-5\/10, 5/10, $use-ln-pull-5-10),
+  (ln-u-pull-6\/10, 6/10, $use-ln-pull-6-10),
+  (ln-u-pull-7\/10, 7/10, $use-ln-pull-7-10),
+  (ln-u-pull-8\/10, 8/10, $use-ln-pull-8-10),
+  (ln-u-pull-9\/10, 9/10, $use-ln-pull-9-10),
+  (ln-u-pull-1\/12, 1/12, $use-ln-pull-1-12),
+  (ln-u-pull-2\/12, 2/12, $use-ln-pull-2-12),
+  (ln-u-pull-3\/12, 3/12, $use-ln-pull-3-12),
+  (ln-u-pull-4\/12, 4/12, $use-ln-pull-4-12),
+  (ln-u-pull-5\/12, 5/12, $use-ln-pull-5-12),
+  (ln-u-pull-6\/12, 6/12, $use-ln-pull-6-12),
+  (ln-u-pull-7\/12, 7/12, $use-ln-pull-7-12),
+  (ln-u-pull-8\/12, 8/12, $use-ln-pull-8-12),
+  (ln-u-pull-9\/12, 9/12, $use-ln-pull-9-12),
+  (ln-u-pull-10\/12, 10/12, $use-ln-pull-10-12),
+  (ln-u-pull-11\/12, 11/12, $use-ln-pull-11-12)
+);
+
+@include ln-make-offsets(right, $pull-fractions);
+$push-fractions: (
+  (ln-u-push-1\/1, 1, $use-ln-push-1-1),
+  (ln-u-push-1\/2, 1/2, $use-ln-push-1-2),
+  (ln-u-push-1\/3, 1/3, $use-ln-push-1-3),
+  (ln-u-push-2\/3, 2/3, $use-ln-push-2-3),
+  (ln-u-push-1\/4, 1/4, $use-ln-push-1-4),
+  (ln-u-push-2\/4, 2/4, $use-ln-push-2-4),
+  (ln-u-push-3\/4, 3/4, $use-ln-push-3-4),
+  (ln-u-push-1\/5, 1/5, $use-ln-push-1-5),
+  (ln-u-push-2\/5, 2/5, $use-ln-push-2-5),
+  (ln-u-push-3\/5, 3/5, $use-ln-push-3-5),
+  (ln-u-push-4\/5, 4/5, $use-ln-push-4-5),
+  (ln-u-push-1\/6, 1/6, $use-ln-push-1-6),
+  (ln-u-push-2\/6, 2/6, $use-ln-push-2-6),
+  (ln-u-push-3\/6, 3/6, $use-ln-push-3-6),
+  (ln-u-push-4\/6, 4/6, $use-ln-push-4-6),
+  (ln-u-push-5\/6, 5/6, $use-ln-push-5-6),
+  (ln-u-push-1\/8, 1/8, $use-ln-push-1-8),
+  (ln-u-push-2\/8, 2/8, $use-ln-push-2-8),
+  (ln-u-push-3\/8, 3/8, $use-ln-push-3-8),
+  (ln-u-push-4\/8, 4/8, $use-ln-push-4-8),
+  (ln-u-push-5\/8, 5/8, $use-ln-push-5-8),
+  (ln-u-push-6\/8, 6/8, $use-ln-push-6-8),
+  (ln-u-push-7\/8, 7/8, $use-ln-push-7-8),
+  (ln-u-push-1\/10, 1/10, $use-ln-push-1-10),
+  (ln-u-push-2\/10, 2/10, $use-ln-push-2-10),
+  (ln-u-push-3\/10, 3/10, $use-ln-push-3-10),
+  (ln-u-push-4\/10, 4/10, $use-ln-push-4-10),
+  (ln-u-push-5\/10, 5/10, $use-ln-push-5-10),
+  (ln-u-push-6\/10, 6/10, $use-ln-push-6-10),
+  (ln-u-push-7\/10, 7/10, $use-ln-push-7-10),
+  (ln-u-push-8\/10, 8/10, $use-ln-push-8-10),
+  (ln-u-push-9\/10, 9/10, $use-ln-push-9-10),
+  (ln-u-push-1\/12, 1/12, $use-ln-push-1-12),
+  (ln-u-push-2\/12, 2/12, $use-ln-push-2-12),
+  (ln-u-push-3\/12, 3/12, $use-ln-push-3-12),
+  (ln-u-push-4\/12, 4/12, $use-ln-push-4-12),
+  (ln-u-push-5\/12, 5/12, $use-ln-push-5-12),
+  (ln-u-push-6\/12, 6/12, $use-ln-push-6-12),
+  (ln-u-push-7\/12, 7/12, $use-ln-push-7-12),
+  (ln-u-push-8\/12, 8/12, $use-ln-push-8-12),
+  (ln-u-push-9\/12, 9/12, $use-ln-push-9-12),
+  (ln-u-push-10\/12, 10/12, $use-ln-push-10-12),
+  (ln-u-push-11\/12, 11/12, $use-ln-push-11-12)
+);
+
+@include ln-make-offsets(left, $push-fractions);
+////
+/// @group utilities/typography
+////
+
+@if ($use-ln-fonts) {
+  @each $key, $value in $ln-fonts {
+/* stylelint-disable */
+/// Sets the font styling to match those defined for the related key in the `$ln-fonts` list
+/// @name Font
+/// @example markup
+///   <p class="ln-u-hero">Hero (ln-u-hero)</p>
+///   <p class="ln-u-h1">Heading h1 (ln-u-h1)</p>
+///   <p class="ln-u-h2">Heading h2 (ln-u-h2)</p>
+///   <p class="ln-u-h3">Heading h3 (ln-u-h3)</p>
+///   <p class="ln-u-h4">Heading h4 (ln-u-h4)</p>
+///   <p class="ln-u-h5">Heading h5 (ln-u-h5)</p>
+///   <p class="ln-u-h6">Heading h6 (ln-u-h6)</p>
+///   <p class="ln-u-cta">CTA (ln-u-cta)</p>
+///   <p class="ln-u-body">Body copy (ln-u-body)</p>
+///   <p class="ln-u-body-sm">Small body copy (ln-u-body-sm)</p>
+/* stylelint-enable */
+    .ln-u-#{$key} {
+      @include ln-font($key);
+    }
+  }
+}
+
+@if ($use-ln-font-size) {
+  @each $font-key, $values in $ln-font-sizes {
+/* stylelint-disable */
+/// Sets the `font-size` to match the related key in the `$ln-fonts` list
+/// @name Size
+/// @example markup
+///   <p class="ln-u-font-size-h1">Heading h1 (ln-u-font-size-h1)</p>
+///   <p class="ln-u-font-size-h2">Heading h2 (ln-u-font-size-h2)</p>
+///   <p class="ln-u-font-size-h3">Heading h3 (ln-u-font-size-h3)</p>
+///   <p class="ln-u-font-size-h4">Heading h4 (ln-u-font-size-h4)</p>
+///   <p class="ln-u-font-size-h5">Heading h5 (ln-u-font-size-h5)</p>
+///   <p class="ln-u-font-size-h6">Heading h6 (ln-u-font-size-h6)</p>
+/* stylelint-enable */
+    .ln-u-font-size-#{$font-key} {
+      @each $breakpoint, $font-size in $values {
+        /* stylelint-disable max-nesting-depth */
+        @if $breakpoint == 'def' {
+          font-size: $font-size;
+        }
+
+        @else {
+          @include ln-respond-to($breakpoint) {
+            font-size: $font-size;
+          }
+        }
+        /* stylelint-enable */
+      }
+    }
+  }
+}
+
+@if $use-ln-font-styling {
+/* stylelint-disable */
+/// Utility classes to set the `font-weight` for an element with the value derived from the
+/// `$ln-font-weight-[key]` settings
+/// @name Weight
+/// @example markup
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-font-weight-regular">ln-u-font-weight-regular</p>
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-font-weight-medium">ln-u-font-weight-medium</p>
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-font-weight-bold">ln-u-font-weight-bold</p>
+/* stylelint-enable */
+  .ln-u-font-weight-regular {
+    font-weight: $ln-font-weight-regular !important;
+  }
+
+  .ln-u-font-weight-medium {
+    font-weight: $ln-font-weight-medium !important;
+  }
+
+  .ln-u-font-weight-bold {
+    font-weight: $ln-font-weight-bold !important;
+  }
+
+/* stylelint-disable */
+/// Utility classes to control the `text-decoration` & `font-style` of an element
+/// @name Styling
+/// @example markup
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-text-decoration-underline">ln-u-text-decoration-underline</p>
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-text-decoration-normal">ln-u-text-decoration-normal</p>
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-text-style-italic">ln-u-text-style-italic</p>
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-font-style-normal">ln-u-font-style-normal</p>
+/* stylelint-enable */
+  .ln-u-text-decoration-underline {
+    text-decoration: underline !important;
+  }
+
+  .ln-u-text-decoration-normal {
+    text-decoration: none !important;
+  }
+
+  .ln-u-text-style-italic {
+    font-style: italic !important;
+  }
+
+  .ln-u-font-style-normal {
+    font-style: normal !important;
+  }
+}
+
+@if $use-ln-text-alignment {
+/* stylelint-disable */
+/// Sets the `text-alignment` on an element
+/// @name Alignment
+/// @example markup
+///   <p class="ln-u-text-align-center">ln-u-text-align-center</p>
+///   <p class="ln-u-text-align-right">ln-u-text-align-right</p>
+///   <p class="ln-u-text-align-left">ln-u-text-align-left</p>
+/* stylelint-enable */
+  .ln-u-text-align-center {
+    text-align: center !important;
+  }
+
+  .ln-u-text-align-right {
+    text-align: right !important;
+  }
+
+  .ln-u-text-align-left {
+    text-align: left !important;
+  }
+}
+
+@if $use-ln-font-family {
+  .ln-u-font-family-base {
+    font-family: $ln-font-family-base !important;
+  }
+
+  .ln-u-font-family-brand {
+    font-family: $ln-font-family-brand !important;
+  }
+}
+$width-fractions: (
+  (ln-u-1\/1, 1, $use-ln-width-1-1),
+  (ln-u-1\/2, 1/2, $use-ln-width-1-2),
+  (ln-u-1\/3, 1/3, $use-ln-width-1-3),
+  (ln-u-2\/3, 2/3, $use-ln-width-2-3),
+  (ln-u-1\/4, 1/4, $use-ln-width-1-4),
+  (ln-u-2\/4, 2/4, $use-ln-width-2-4),
+  (ln-u-3\/4, 3/4, $use-ln-width-3-4),
+  (ln-u-1\/5, 1/5, $use-ln-width-1-5),
+  (ln-u-2\/5, 2/5, $use-ln-width-2-5),
+  (ln-u-3\/5, 3/5, $use-ln-width-3-5),
+  (ln-u-4\/5, 4/5, $use-ln-width-4-5),
+  (ln-u-1\/6, 1/6, $use-ln-width-1-6),
+  (ln-u-2\/6, 2/6, $use-ln-width-2-6),
+  (ln-u-3\/6, 3/6, $use-ln-width-3-6),
+  (ln-u-4\/6, 4/6, $use-ln-width-4-6),
+  (ln-u-5\/6, 5/6, $use-ln-width-5-6),
+  (ln-u-1\/8, 1/8, $use-ln-width-1-8),
+  (ln-u-2\/8, 2/8, $use-ln-width-2-8),
+  (ln-u-3\/8, 3/8, $use-ln-width-3-8),
+  (ln-u-4\/8, 4/8, $use-ln-width-4-8),
+  (ln-u-5\/8, 5/8, $use-ln-width-5-8),
+  (ln-u-6\/8, 6/8, $use-ln-width-6-8),
+  (ln-u-7\/8, 7/8, $use-ln-width-7-8),
+  (ln-u-1\/10, 1/10, $use-ln-width-1-10),
+  (ln-u-2\/10, 2/10, $use-ln-width-2-10),
+  (ln-u-3\/10, 3/10, $use-ln-width-3-10),
+  (ln-u-4\/10, 4/10, $use-ln-width-4-10),
+  (ln-u-5\/10, 5/10, $use-ln-width-5-10),
+  (ln-u-6\/10, 6/10, $use-ln-width-6-10),
+  (ln-u-7\/10, 7/10, $use-ln-width-7-10),
+  (ln-u-8\/10, 8/10, $use-ln-width-8-10),
+  (ln-u-9\/10, 9/10, $use-ln-width-9-10),
+  (ln-u-1\/12, 1/12, $use-ln-width-1-12),
+  (ln-u-2\/12, 2/12, $use-ln-width-2-12),
+  (ln-u-3\/12, 3/12, $use-ln-width-3-12),
+  (ln-u-4\/12, 4/12, $use-ln-width-4-12),
+  (ln-u-5\/12, 5/12, $use-ln-width-5-12),
+  (ln-u-6\/12, 6/12, $use-ln-width-6-12),
+  (ln-u-7\/12, 7/12, $use-ln-width-7-12),
+  (ln-u-8\/12, 8/12, $use-ln-width-8-12),
+  (ln-u-9\/12, 9/12, $use-ln-width-9-12),
+  (ln-u-10\/12, 10/12, $use-ln-width-10-12),
+  (ln-u-11\/12, 11/12, $use-ln-width-11-12)
+);
+
+@include ln-make-offsets(width, $width-fractions);
