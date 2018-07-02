@@ -1,0 +1,8 @@
+@if $use-ln-bare-list {
+  .ln-o-bare-list {
+    list-style: none;
+    margin: 0;
+  }
+
+  @include ln-list-spacing('bare-list', 'bottom');
+}

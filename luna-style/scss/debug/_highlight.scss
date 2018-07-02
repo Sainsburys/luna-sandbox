@@ -1,0 +1,69 @@
+@if ($ln-debug-all-classes) {
+  [class] {
+    outline: 5px solid $ln-debug-color-all-classes !important;
+  }
+}
+
+@if ($ln-debug-all-ids) {
+  [id] {
+    outline: 5px solid $ln-debug-color-all-ids !important;
+  }
+}
+
+@if ($ln-debug-objects) {
+  [class*=' ln-o-'],
+  [class^='ln-o-'] {
+    outline: 5px solid $ln-debug-color-objects !important;
+  }
+}
+
+@if ($ln-debug-grid) {
+  [class*=' ln-o-grid'],
+  [class^='ln-o-grid'] {
+    outline: 5px solid $ln-debug-color-grid !important;
+  }
+}
+
+@if ($ln-debug-components) {
+  [class*=' ln-c-'],
+  [class^='ln-c-'] {
+    outline: 5px solid $ln-debug-color-components !important;
+  }
+}
+
+@if ($ln-debug-utilities) {
+  [class*=' ln-u-'],
+  [class^='ln-u-'] {
+    outline: 5px solid $ln-debug-color-utilities !important;
+  }
+}
+
+@if ($ln-debug-bem-children) {
+  [class*='__'] {
+    outline: 5px solid $ln-debug-color-bem-children !important;
+  }
+}
+
+@if ($ln-debug-bem-modifiers) {
+  [class*='--'] {
+    outline: 5px solid $ln-debug-color-bem-modifiers !important;
+  }
+}
+
+@if ($ln-debug-responsive-suffixes) {
+  [class*='@'] {
+    outline: 5px solid $ln-debug-color-responsive-suffixes !important;
+  }
+}
+
+@if ($ln-debug-dividing-suffixes) {
+  [class*='/'] {
+    outline: 5px solid $ln-debug-color-dividing-suffixes !important;
+  }
+}
+
+@if ($ln-debug-multiplying-suffixes) {
+  [class*='*'] {
+    outline: 5px solid $ln-debug-color-multiplying-suffixes !important;
+  }
+}

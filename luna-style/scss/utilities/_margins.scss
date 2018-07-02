@@ -1,0 +1,188 @@
+////
+/// @group utilities/margins
+////
+
+@if $use-ln-push {
+/* stylelint-disable */
+/// Adds `$ln-scaled-space` margin to the specified side which changes in
+/// relation to the device breakpoint, with variants of `$ln-scaled-space`
+/// available.
+/// @name Push
+/// @example markup - Default
+///   <div class="ln-u-push">ln-u-push</div>
+///   <div class="ln-u-push-top">ln-u-push-top</div>
+///   <div class="ln-u-push-right">ln-u-push-right</div>
+///   <div class="ln-u-push-bottom">ln-u-push-bottom</div>
+///   <div class="ln-u-push-left">ln-u-push-bottom</div>
+///   <div class="ln-u-push-sides">ln-u-push-sides</div>
+///   <div class="ln-u-push-ends">ln-u-push-ends</div>
+/// @example markup - 1 / 2 x spacing unit
+///   <div class="ln-u-push*1/2">ln-u-push*1/2</div>
+///   <div class="ln-u-push-top*1/2">ln-u-push-top*1/2</div>
+///   <div class="ln-u-push-right*1/2">ln-u-push-right*1/2</div>
+///   <div class="ln-u-push-bottom*1/2">ln-u-push-bottom*1/2</div>
+///   <div class="ln-u-push-left*1/2">ln-u-push-bottom*1/2</div>
+///   <div class="ln-u-push-sides*1/2">ln-u-push-sides*1/2</div>
+///   <div class="ln-u-push-ends*1/2">ln-u-push-ends*1/2</div>
+/// @example markup - 2 x spacing unit
+///   <div class="ln-u-push*2">ln-u-push*2</div>
+///   <div class="ln-u-push-top*2">ln-u-push-top*2</div>
+///   <div class="ln-u-push-right*2">ln-u-push-right*2</div>
+///   <div class="ln-u-push-bottom*2">ln-u-push-bottom*2</div>
+///   <div class="ln-u-push-left*2">ln-u-push-bottom*2</div>
+///   <div class="ln-u-push-sides*2">ln-u-push-sides*2</div>
+///   <div class="ln-u-push-ends*2">ln-u-push-ends*2</div>
+/// @example markup - 3 x spacing unit
+///   <div class="ln-u-push*3">ln-u-push*3</div>
+///   <div class="ln-u-push-top*3">ln-u-push-top*3</div>
+///   <div class="ln-u-push-right*3">ln-u-push-right*3</div>
+///   <div class="ln-u-push-bottom*3">ln-u-push-bottom*3</div>
+///   <div class="ln-u-push-left*3">ln-u-push-bottom*3</div>
+///   <div class="ln-u-push-sides*3">ln-u-push-sides*3</div>
+///   <div class="ln-u-push-ends*3">ln-u-push-ends*3</div>
+/// @example markup - 4 x spacing unit
+///   <div class="ln-u-push*4">ln-u-push*4</div>
+///   <div class="ln-u-push-top*4">ln-u-push-top*4</div>
+///   <div class="ln-u-push-right*4">ln-u-push-right*4</div>
+///   <div class="ln-u-push-bottom*4">ln-u-push-bottom*4</div>
+///   <div class="ln-u-push-left*4">ln-u-push-bottom*4</div>
+///   <div class="ln-u-push-sides*4">ln-u-push-sides*4</div>
+///   <div class="ln-u-push-ends*4">ln-u-push-ends*4</div>
+/* stylelint-enable */
+  @each $key, $value in $ln-scaled-space {
+    $suffix: '';
+
+    @if ($key != 'def') { $suffix: '-#{$key}'; }
+
+    .ln-u-push#{$suffix} {
+      @include ln-push($key, true);
+    }
+
+    .ln-u-push-top#{$suffix} {
+      @include ln-push-top($key, true);
+    }
+
+    .ln-u-push-right#{$suffix} {
+      @include ln-push-right($key, true);
+    }
+
+    .ln-u-push-bottom#{$suffix} {
+      @include ln-push-bottom($key, true);
+    }
+
+    .ln-u-push-left#{$suffix} {
+      @include ln-push-left($key, true);
+    }
+
+    .ln-u-push-sides#{$suffix} {
+      @include ln-push-sides($key, true);
+    }
+
+    .ln-u-push-ends#{$suffix} {
+      @include ln-push-ends($key, true);
+    }
+  }
+}
+
+@if $use-ln-flush {
+/* stylelint-disable */
+/// Removes any margin from the specified side
+/// @name Flush
+/// @example markup
+///   <div class="ln-u-flush">ln-u-flush</div>
+///   <div class="ln-u-flush-top">ln-u-flush-top</div>
+///   <div class="ln-u-flush-right">ln-u-flush-right</div>
+///   <div class="ln-u-flush-bottom">ln-u-flush-bottom</div>
+///   <div class="ln-u-flush-left">ln-u-flush-bottom</div>
+///   <div class="ln-u-flush-sides">ln-u-flush-sides</div>
+///   <div class="ln-u-flush-ends">ln-u-flush-ends</div>
+/* stylelint-enable */
+  .ln-u-flush {
+    margin: 0 !important;
+  }
+
+  .ln-u-flush-top {
+    margin-top: 0 !important;
+  }
+
+  .ln-u-flush-right {
+    margin-right: 0 !important;
+  }
+
+  .ln-u-flush-bottom {
+    margin-bottom: 0 !important;
+  }
+
+  .ln-u-flush-left {
+    margin-left: 0 !important;
+  }
+
+  .ln-u-flush-sides {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .ln-u-flush-ends {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+}
+
+@if $use-ln-margin {
+/* stylelint-disable */
+/// Adds `$ln-fixed-space` margin to the specified side which matches a
+/// the `$ln-space` value, with multiplier variations available.
+/// @name Margin
+/// @example markup - Default
+///   <div class="ln-u-margin">ln-u-margin</div>
+///   <div class="ln-u-margin-top">ln-u-margin-top</div>
+///   <div class="ln-u-margin-right">ln-u-margin-right</div>
+///   <div class="ln-u-margin-bottom">ln-u-margin-bottom</div>
+///   <div class="ln-u-margin-left">ln-u-margin-bottom</div>
+///   <div class="ln-u-margin-sides">ln-u-margin-sides</div>
+///   <div class="ln-u-margin-ends">ln-u-margin-ends</div>
+/// @example markup - 1/2 * ln-space
+///   <div class="ln-u-margin*1/2">ln-u-margin*1/2</div>
+/// @example markup - 2 * ln-space
+///   <div class="ln-u-margin*2">ln-u-margin*2</div>
+/// @example markup - 3 * ln-space
+///   <div class="ln-u-margin*3">ln-u-margin*3</div>
+/// @example markup - 4 * ln-space
+///   <div class="ln-u-margin*4">ln-u-margin*4</div>
+/* stylelint-enable */
+  @each $key, $value in $ln-fixed-space {
+    $suffix: '';
+
+    @if ($key != 'def') { $suffix: '#{$key}'; }
+
+    .ln-u-margin#{$suffix} {
+      margin: $value !important;
+    }
+
+    .ln-u-margin-top#{$suffix} {
+      margin-top: $value !important;
+    }
+
+    .ln-u-margin-right#{$suffix} {
+      margin-right: $value !important;
+    }
+
+    .ln-u-margin-bottom#{$suffix} {
+      margin-bottom: $value !important;
+    }
+
+    .ln-u-margin-left#{$suffix} {
+      margin-left: $value !important;
+    }
+
+    .ln-u-margin-sides#{$suffix} {
+      margin-left: $value !important;
+      margin-right: $value !important;
+    }
+
+    .ln-u-margin-ends#{$suffix} {
+      margin-bottom: $value !important;
+      margin-top: $value !important;
+    }
+  }
+}

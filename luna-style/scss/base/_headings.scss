@@ -1,0 +1,23 @@
+h1 {
+  @include ln-font(h1);
+}
+
+h2 {
+  @include ln-font(h2);
+}
+
+h3 {
+  @include ln-font(h3);
+}
+
+h4 {
+  @include ln-font(h4);
+}
+
+h5 {
+  @include ln-font(h5);
+}
+
+h6 {
+  @include ln-font(h6);
+}

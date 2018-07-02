@@ -1,0 +1,179 @@
+@if $use-ln-grid {
+  // #Grid
+
+  /*
+  1. Ensure grid spans full width of parent.
+  2. Reset any margins and paddings.
+  3. Set a zero font-size to remove spacing on the `o-grid__item` children
+     caused by them having their display set to `inline-block`.
+  4. Remove any possible list styling.
+  */
+  .ln-o-grid {
+    list-style: none; // [5]
+    margin: 0; // [2]
+    min-width: 100%; // [1]
+    padding: 0; // [2]
+
+    @if $use-ln-grid-zero-font-size-fix {
+      font-size: 0; // [4]
+    }
+  }
+
+  // Build grid gutters.
+  @each $key, $value in $ln-grid-gutter-sizes {
+    /* stylelint-disable max-nesting-depth */
+    @if type-of($value) == 'map' {
+      @each $bp, $size in $value {
+        @if $bp == 'def' {
+          @include ln-gutters($key, $size, null, false);
+        }
+
+        @else {
+          @include ln-respond-to($bp) {
+            @include ln-gutters($key, $size, null, false);
+          }
+        }
+      }
+    }
+
+    @else {
+      @include ln-gutters($key, $value);
+    }
+
+    @if $use-ln-grid-matrix {
+      @if type-of($value) == 'map' {
+        @each $bp, $size in $value {
+          @if $bp == 'def' {
+            @include ln-gutters($key, $size, 'matrix', false);
+          }
+
+          @else {
+            @include ln-respond-to($bp) {
+              @include ln-gutters($key, $size, 'matrix', false);
+            }
+          }
+        }
+      }
+
+      @else {
+        @include ln-gutters($key, $value, 'matrix');
+      }
+    }
+    /* stylelint-enable max-nesting-depth */
+  }
+
+  /*
+  1. Give grid items equal heights using flexbox.
+    Works for IE10+  IE9 will fallback to the default grid.
+  2. Fix for IE10 which requires children of flexbox-items to have a
+    maximum width of 100%.
+  */
+  @if $use-ln-grid-equal-height { /* 1 */
+    .ln-o-grid--equal-height,
+    .ln-o-grid--equal-height > .ln-o-grid__item,
+    .ln-o-grid--equal-height--centered-content > .ln-o-grid__item {
+      display: flex;
+
+      > * { /** [2] */
+        width: 100%;
+      }
+    }
+
+    /*
+    Allow equal height items to wrap, just as standard grid items do, when
+    a combined width of the grid-items is > 100%.
+    */
+    .ln-o-grid--equal-height {
+      flex-wrap: wrap;
+    }
+
+    // .ln-u-text-align-center is the method for centering grid items, this makes it work
+    // also for equal height grids, which cannot be text-aligned due to the use of flexbox.
+    .ln-o-grid--equal-height.ln-u-text-align-center {
+      justify-content: center;
+    }
+
+    // Vertically center any content nested inside of equal-height grid items.
+    .ln-o-grid--equal-height--centered-content > .ln-o-grid__item > * {
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  // Vertically align grid-items to the center
+  @if $use-ln-grid-center {
+    .ln-o-grid--center > .ln-o-grid__item {
+      vertical-align: middle;
+    }
+  }
+
+  // Vertically align grid-items to the bottom
+  @if $use-ln-grid-bottom {
+    .ln-o-grid--bottom > .ln-o-grid__item {
+      vertical-align: bottom;
+    }
+  }
+
+  // Reverse grid items on the horizontal axis.
+  @if $use-ln-grid-reverse {
+    .ln-o-grid--reverse {
+      direction: rtl;
+      text-align: left;
+
+      > .ln-o-grid__item {
+        direction: ltr;
+        text-align: left;
+      }
+    }
+  }
+
+  /*
+  1. Set display to relative to allow the push/pull classes to work
+     which are using left/right positioning values.
+  2. Set display to inline-block.  Rather than floating block elements that
+     you see on many other grid systems, inline-blocks have a number of
+     benefits such as:
+     - No clearfixing issues.
+     - Rows will tile nicely even if grid items are all different heights.
+     - You can vertically align grid items that are different heights.
+     - You can horizontally align grid items, when total width is <100%
+       using text-align on the parent 'grid' component.
+     - You can reverse the order of the grid items by using `grid--reverse`
+        which changes the direction property from right to left.
+  3. Set default width of 100%.
+  4. Prevent item from collapsing when empty.
+  5. When grid items are differing heights, align them to the top.
+  6. Prevent grid-items from inhering text-align properties set
+     One parent or ancestor nodes.
+  7. Inject the base font-size.  The grid items cannot inherit font-size
+     As the font-size on the parent `o-grid` component is set to zero to
+     overcome whitespace issues when using inline-block.
+  */
+  .ln-o-grid__item {
+    display: inline-block; // [2]
+    min-height: 1px; // [4]
+    position: relative; // [1]
+    text-align: left; // [7]
+    vertical-align: top; // [6]
+    width: 100%; // [3]
+  }
+}
+
+@if $use-ln-grid-zero-font-size-fix {
+  .ln-o-grid__item {
+    $font-size-grid: map-get($ln-font-sizes, $ln-font-size-base);
+
+    @each $key, $value in $font-size-grid {
+      @if $key == 'def' {
+        font-size: $value;
+      }
+
+      @else {
+        /* stylelint-disable-next-line max-nesting-depth */
+        @include ln-respond-to($key) {
+          font-size: $value;
+        }
+      }
+    }
+  }
+}

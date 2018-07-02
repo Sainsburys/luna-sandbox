@@ -1,0 +1,22 @@
+@if $use-ln-article {
+  .ln-o-article {
+    /* Need to nest more than 1 level here to format loop */
+    /* stylelint-disable max-nesting-depth  */
+    @each $key, $values in $ln-font-sizes {
+      #{$key} {
+        @each $key, $value in $values {
+          @if $key == 'def' {
+            margin-bottom: ($value / 3);
+          }
+
+          @else {
+            @include ln-respond-to($key) {
+              margin-bottom: ($value / 3);
+            }
+          }
+        }
+      }
+    }
+    /* stylelint-enable */
+  }
+}

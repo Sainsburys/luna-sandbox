@@ -1,0 +1,175 @@
+@if $use-ln-tabs {
+  .ln-c-tabs {
+    white-space: nowrap;
+  }
+
+  .ln-c-tabs__list-wrap {
+    height: $ln-size-def;
+    overflow: hidden;
+    position: relative;
+
+    .has-prev-arrow & {
+      padding-left: $ln-size-def;
+    }
+
+    .has-next-arrow & {
+      padding-right: $ln-size-def;
+    }
+
+    @include ln-respond-to($ln-size-lg-breakpoint) {
+      .ln-c-tabs--deep & {
+        height: $ln-size-lg;
+      }
+    }
+
+    &::after {
+      background-color: $ln-color-base-border;
+      bottom: 0;
+      content: ' ';
+      height: 1px;
+      left: 0;
+      position: absolute;
+      right: 0;
+
+      .has-prev-arrow &,
+      .has-next-arrow & {
+        display: none;
+      }
+    }
+  }
+
+  .ln-c-tabs__list {
+    font-size: 0;
+    list-style: none;
+    margin-bottom: 0;
+    margin-left: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    transition: transform $ln-transition-duration;
+
+    .has-prev-arrow &,
+    .has-next-arrow & {
+      overflow: visible;
+    }
+  }
+
+  .ln-c-tabs__link:not(:last-child),
+  .ln-c-tabs:not(.ln-c-tabs--fill) .ln-c-tabs__link.is-active {
+    border-right-width: 1px;
+  }
+
+  .ln-c-tabs__link {
+    @include ln-font-size('h5');
+    @include ln-soft-sides;
+
+    align-items: center;
+    background-color: $ln-color-white;
+    border: 0 solid $ln-color-base-border;
+    border-radius: 0;
+    color: $ln-color-black;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: $ln-font-family-brand;
+    font-weight: $ln-font-weight-medium;
+    justify-content: center;
+    min-height: $ln-size-def;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: top;
+
+    .ln-c-tabs--deep & {
+      @include ln-respond-to($ln-size-lg-breakpoint) {
+        height: $ln-size-lg;
+      }
+    }
+
+    &:hover,
+    &:focus,
+    &.is-active {
+      color: $ln-color-alpha-dark;
+    }
+
+    &.is-active {
+      font-weight: $ln-font-weight-bold;
+      z-index: 1;
+    }
+
+    &.is-active::before {
+      background-color: $ln-color-alpha-dark;
+      content: ' ';
+      height: $ln-status-bar-width;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    .has-prev-arrow &,
+    .has-next-arrow & {
+      @include ln-font-size('body');
+
+      border-bottom-width: 1px;
+
+      &.is-active {
+        border-bottom-color: $ln-color-white;
+      }
+
+      &:not(.ln-c-tabs__link--arrow) {
+        width: 50%;
+      }
+    }
+  }
+
+  .ln-c-tabs__link--arrow {
+    border-style: none solid solid;
+    display: none;
+    padding: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: $ln-size-def;
+    z-index: 1;
+  }
+
+  .ln-c-tabs__link--arrow-prev {
+    left: 0;
+  }
+
+  .ln-c-tabs__link--arrow-next {
+    right: 0;
+  }
+
+  .has-prev-arrow .ln-c-tabs__link--arrow-prev,
+  .has-next-arrow .ln-c-tabs__link--arrow-next {
+    display: inline-block;
+  }
+
+  .ln-c-tabs--fill .ln-c-tabs__list {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .ln-c-tabs--fill .ln-c-tabs__link {
+    display: table-cell;
+    line-height: $ln-size-def;
+    overflow: hidden;
+    padding-left: $ln-space;
+    padding-right: $ln-space;
+    text-overflow: ellipsis;
+
+    @include ln-respond-to($ln-size-lg-breakpoint) {
+      .ln-c-tabs--deep & {
+        line-height: $ln-size-lg;
+      }
+    }
+  }
+
+  // IE10 + fix for text alignment https://github.com/philipwalton/flexbugs#flexbug-3
+  @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .ln-c-tabs__link {
+      height: $ln-size-def;
+    }
+  }
+}

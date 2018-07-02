@@ -1,0 +1,9 @@
+@if $use-ln-card {
+  .ln-c-card {
+    background: $ln-color-white;
+  }
+
+  .ln-c-card--soft {
+    @include ln-soft;
+  }
+}

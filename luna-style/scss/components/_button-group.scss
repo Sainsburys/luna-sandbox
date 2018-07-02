@@ -1,0 +1,14 @@
+@if $use-ln-button-group {
+  .ln-c-button-group {
+    @include ln-soft-top;
+    @include ln-push-bottom;
+  }
+
+  .ln-c-button-group__primary {
+    float: right;
+  }
+
+  .ln-c-button-group__secondary {
+    float: left;
+  }
+}

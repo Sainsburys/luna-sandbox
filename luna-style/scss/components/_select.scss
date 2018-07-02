@@ -1,0 +1,48 @@
+@if $use-ln-select {
+  .ln-c-select {
+    @include ln-text-input;
+    @include ln-input-icon(right, 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODUuMzQ0IiBoZWlnaHQ9IjE4NS4zNDQiIHZpZXdCb3g9IjAgMCAxODUuMzQ0IDE4NS4zNDQiPjxwYXRoIGZpbGw9IiMxNjE2MTYiIGQ9Ik05Mi42NzIgMTQ0LjM3M2MtMi43NTIgMC01LjQ5My0xLjA0NC03LjU5My0zLjEzOEwzLjE0NCA1OS4zYy00LjE5NC00LjE5OC00LjE5NC0xMC45OSAwLTE1LjE4IDQuMTk0LTQuMTk4IDEwLjk4Ny00LjE5OCAxNS4xOCAwbDc0LjM0NyA3NC4zNDIgNzQuMzQ3LTc0LjM0YzQuMTkzLTQuMiAxMC45ODYtNC4yIDE1LjE4IDAgNC4xOTMgNC4xOTMgNC4xOTMgMTAuOTggMCAxNS4xOGwtODEuOTQgODEuOTMzYy0yLjA5NCAyLjA5NC00Ljg0IDMuMTM4LTcuNTg4IDMuMTM4eiIvPjwvc3ZnPg==');
+
+    appearance: none;
+    border-radius: $ln-border-radius;
+    color: $ln-color-base-text;
+    width: 100%;
+
+    // Fix for FF (https://stackoverflow.com/a/21725900)
+    @-moz-document url-prefix('') { padding-top: 15px; /* Magic number */ }
+
+    &::-ms-expand {
+      // Remove IE dropdown icon (IE9+)
+      display: none;
+    }
+
+    @media all and (min-width: 0\0) and (min-resolution: 0.001dpcm) {
+      // Target IE 9 and remove chevron.
+      // Reason: Native dropdown icon cannot be gracefully hidden in IE9 so revert to native select appearence to prevent multiple dropdown arrows.
+      background-image: none;
+    }
+
+    &:disabled {
+      @include ln-input-icon(right, 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODUuMzQ0IiBoZWlnaHQ9IjE4NS4zNDQiIHZpZXdCb3g9IjAgMCAxODUuMzQ0IDE4NS4zNDQiPjxwYXRoIGZpbGw9IiM3Njc2NzYiIGQ9Ik05Mi42NzIgMTQ0LjM3M2MtMi43NTIgMC01LjQ5My0xLjA0NC03LjU5My0zLjEzOEwzLjE0NCA1OS4zYy00LjE5NC00LjE5OC00LjE5NC0xMC45OSAwLTE1LjE4IDQuMTk0LTQuMTk4IDEwLjk4Ny00LjE5OCAxNS4xOCAwbDc0LjM0NyA3NC4zNDIgNzQuMzQ3LTc0LjM0YzQuMTkzLTQuMiAxMC45ODYtNC4yIDE1LjE4IDAgNC4xOTMgNC4xOTMgNC4xOTMgMTAuOTggMCAxNS4xOGwtODEuOTQgODEuOTMzYy0yLjA5NCAyLjA5NC00Ljg0IDMuMTM4LTcuNTg4IDMuMTM4eiIvPjwvc3ZnPg==');
+
+      background-color: $ln-color-background-disabled;
+      cursor: not-allowed;
+    }
+
+    &:not([disabled]) {
+      .ln-c-form-group.has-error &,
+      .ln-c-form-group.has-warning & {
+        border-left-width: $ln-status-bar-width;
+        padding-left: calc(#{$ln-space-x2} - #{$ln-status-bar-width - 1});
+      }
+
+      .ln-c-form-group.has-error & {
+        @include ln-text-input-border-variant($ln-color-error);
+      }
+
+      .ln-c-form-group.has-warning & {
+        @include ln-text-input-border-variant($ln-color-warning);
+      }
+    }
+  }
+}

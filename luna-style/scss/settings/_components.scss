@@ -1,0 +1,85 @@
+////
+/// Components
+/// @group settings/components
+////
+
+/// Size of coloured bar used by certain components to denote state
+/// @type Length
+$ln-status-bar-width: (0.5 * $ln-space-px) !default; // 4px
+
+/// Consistent border-radius for buttons, text-inputs and various other components.
+/// @type Length
+$ln-border-radius: 0 !default;
+
+/// Consistent transiton durations.
+/// @type Time
+$ln-transition-duration: 0.2s !default;
+
+// Tables
+$ln-table-cell-label-width: 100px !default;
+$ln-table-collapse-map: (
+  md: map-get($ln-breakpoints, 'md')
+) !default;
+
+// Icons
+$ln-icon-space: $ln-space-value / 2;
+
+$ln-icon-size-def: (($ln-icon-space * 5) / $ln-browser-font-size-default);
+$ln-icon-size-small: (($ln-icon-space * 3) / $ln-browser-font-size-default);
+$ln-icon-size-large: (($ln-icon-space * 6) / $ln-browser-font-size-default);
+
+$ln-icon-sizes: (
+  def: $ln-icon-size-def * 1em,
+  small: $ln-icon-size-small * 1em,
+  large: $ln-icon-size-large * 1em,
+) !default;
+
+$ln-icon-sizes-fixed: (
+  def: $ln-icon-size-def * 1rem,
+  small: $ln-icon-size-small * 1rem,
+  large: $ln-icon-size-large * 1rem,
+) !default;
+
+// Input fields
+$ln-color-input-background: $ln-color-white !default;
+$ln-color-background-disabled: $ln-color-grey-v-light !default;
+$ln-color-input-border: $ln-color-grey !default;
+$ln-color-input-border-focus: $ln-color-grey-dark !default;
+
+// Password field strength meter colour
+$ln-color-password-meter-default: $ln-color-grey-light !default;
+
+// Buttons
+$ln-color-button-primary: $ln-color-white !default;
+$ln-color-button-primary-background: $ln-color-alpha !default;
+$ln-color-button-primary-background-hover: $ln-color-alpha-dark !default;
+
+$ln-color-button-secondary: $ln-color-white !default;
+$ln-color-button-secondary-background: $ln-color-beta !default;
+$ln-color-button-secondary-hover: $ln-color-white !default;
+$ln-color-button-secondary-background-hover: $ln-color-beta-dark !default;
+
+$ln-color-button-outlined: $ln-color-alpha !default;
+$ln-color-button-outlined-background: transparent !default;
+$ln-color-button-outlined-border: $ln-color-alpha !default;
+$ln-color-button-outlined-hover: $ln-color-alpha-dark !default;
+$ln-color-button-outlined-background-hover: rgba($ln-color-alpha, 0.06) !default;
+$ln-color-button-outlined-border-hover: $ln-color-alpha-dark !default;
+
+$ln-color-button-disabled: $ln-color-grey !default;
+$ln-color-button-disabled-background: $ln-color-grey-light !default;
+
+$ln-color-button-outlined-disabled-background: $ln-color-grey-v-light !default;
+$ln-color-button-outlined-disabled-border: $ln-color-grey-light !default;
+
+// Badges
+$ln-color-badge-primary: $ln-color-alpha !default;
+$ln-color-badge-secondary: $ln-color-beta !default;
+
+// Navigation
+$ln-navigation-height: $ln-space-px * 8;
+$ln-navigation-collapsed-height: $ln-space-px * 7;
+$ln-navigation-collapsed-width: 380px;
+$ln-nav-item-bar-width: 4px;
+$ln-navigation-collapsed-indent: $ln-space-x3;
+$ln-navigation-collapsed-item-spacing: 10px;

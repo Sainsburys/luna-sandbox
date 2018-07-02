@@ -1,0 +1,57 @@
+@function ln-map-set($map, $key, $value) {
+  $new: ($key: $value);
+
+  @return map-merge($map, $new);
+}
+
+@function ln-map-deep-get($map, $keys...) {
+  @each $key in $keys {
+    $map: map-get($map, $key);
+  }
+
+  @return $map;
+}
+
+/* Font size */
+
+@function ln-px-to-rem-font-size($target-px, $breakpoint) {
+  $v: $target-px / $ln-browser-font-size-default-px;
+
+  @return $v * 1rem;
+}
+
+@function ln-px-to-rem-font-sizes($font-sizes-pixels) {
+  $result: ();
+
+  @each $type-key, $type-map in $font-sizes-pixels {
+    $type-result: ();
+
+    @each $breakpoint, $target-px in $type-map {
+      $type-result: ln-map-set(
+        $type-result,
+        $breakpoint,
+        ln-px-to-rem-font-size($target-px, $breakpoint)
+      );
+    }
+
+    $result: ln-map-set($result, $type-key, $type-result);
+  }
+
+  @return $result;
+}
+
+/* Line height */
+
+@function ln-line-height-to-px-size($line-height, $font-size) {
+  @return $font-size * $line-height;
+}
+
+@function ln-line-height-to-px-sizes($line-height, $font-sizes) {
+  $v: ();
+
+  @each $breakpoint, $font-size in $font-sizes {
+    $v: ln-map-set($v, $breakpoint, ln-line-height-to-px-size($line-height, $font-size));
+  }
+
+  @return $v;
+}

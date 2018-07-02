@@ -1,0 +1,19 @@
+.ln-o-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: auto;
+}
+
+.ln-o-page__body {
+  flex-basis: auto;
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
+.ln-o-page__header,
+.ln-o-page__footer {
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 0;
+}

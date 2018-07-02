@@ -1,0 +1,48 @@
+@if $use-ln-dropdown-button {
+  $ln-dropdown-width: $ln-space * 6;
+
+  .ln-c-dropdown-button {
+    padding-right: $ln-dropdown-width;
+    position: relative;
+  }
+
+  .ln-c-dropdown-button:not(.ln-c-dropdown-button--full) {
+    display: inline-block;
+  }
+
+  .ln-c-dropdown-button__select {
+    appearance: none;
+    background-image: url('data:image/svg+xml;base64, IDxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTg1LjM0NCIgaGVpZ2h0PSIxODUuMzQ0IiB2aWV3Qm94PSIwIDAgMTg1LjM0NCAxODUuMzQ0Ij48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNOTIuNjcyIDE0NC4zNzNjLTIuNzUyIDAtNS40OTMtMS4wNDQtNy41OTMtMy4xMzhMMy4xNDQgNTkuM2MtNC4xOTQtNC4xOTgtNC4xOTQtMTAuOTkgMC0xNS4xOCA0LjE5NC00LjE5OCAxMC45ODctNC4xOTggMTUuMTggMGw3NC4zNDcgNzQuMzQyIDc0LjM0Ny03NC4zNGM0LjE5My00LjIgMTAuOTg2LTQuMiAxNS4xOCAwIDQuMTkzIDQuMTkzIDQuMTkzIDEwLjk4IDAgMTUuMThsLTgxLjk0IDgxLjkzM2MtMi4wOTQgMi4wOTQtNC44NCAzLjEzOC03LjU4OCAzLjEzOHoiLz48L3N2Zz4=');
+    background-position: center 55%;
+    background-repeat: no-repeat;
+    background-size: auto 35%;
+    border-left-color: $ln-color-white;
+    border-radius: $ln-border-radius;
+    border-width: 0 0 0 1px;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: $ln-dropdown-width;
+  }
+
+  .ln-c-dropdown-button__select--primary {
+    background-color: $ln-color-alpha;
+
+    &:hover,
+    &:focus {
+      background-color: $ln-color-alpha-dark;
+    }
+  }
+
+  .ln-c-dropdown-button__select--secondary {
+    background-color: $ln-color-beta;
+
+    &:hover,
+    &:focus {
+      background-color: $ln-color-beta-dark;
+    }
+  }
+}

@@ -1,0 +1,54 @@
+////
+/// @group utilities/colours
+////
+
+@each $key, $value in $ln-colors {
+/* stylelint-disable */
+/// Sets the `color` to match a key existing in `$ln-colors`
+/// @name Text colour
+/// @example markup
+///   <div class="ln-u-soft ln-u-color-orange">ln-u-color-orange</div>
+/* stylelint-enable */
+  @if $use-ln-colors {
+    .ln-u-color-#{$key} {
+      color: $value !important;
+    }
+  }
+
+/* stylelint-disable */
+/// Sets the `background-color` to match a key existing in `$ln-colors`
+/// @name Background colour
+/// @example markup
+///   <div class="ln-u-soft ln-u-color-white ln-u-bg-color-orange-dark">ln-u-bg-color-orange-dark</div>
+/* stylelint-enable */
+  @if $use-ln-bg-colors {
+    .ln-u-bg-color-#{$key} {
+      background-color: $value !important;
+    }
+  }
+}
+
+@each $key, $value in $ln-colors-theming {
+/* stylelint-disable */
+/// Sets the `color` to match a key existing in `$ln-colors-theming`
+/// @name Text colour
+/// @example markup
+///   <div class="ln-u-soft ln-u-color-orange">ln-u-color-alpha</div>
+/* stylelint-enable */
+  @if $use-ln-colors {
+    .ln-u-color-#{$key} {
+      color: $value !important;
+    }
+  }
+/* stylelint-disable */
+/// Sets the `background-color` to match a key existing in `$ln-colors-theming`
+/// @name Background colour
+/// @example markup
+///   <div class="ln-u-soft ln-u-color-white ln-u-bg-color-beta-dark">ln-u-bg-color-orange-dark</div>
+/* stylelint-enable */
+  @if $use-ln-bg-colors {
+    .ln-u-bg-color-#{$key} {
+      background-color: $value !important;
+    }
+  }
+}

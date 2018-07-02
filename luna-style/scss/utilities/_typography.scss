@@ -1,0 +1,137 @@
+////
+/// @group utilities/typography
+////
+
+@if ($use-ln-fonts) {
+  @each $key, $value in $ln-fonts {
+/* stylelint-disable */
+/// Sets the font styling to match those defined for the related key in the `$ln-fonts` list
+/// @name Font
+/// @example markup
+///   <p class="ln-u-hero">Hero (ln-u-hero)</p>
+///   <p class="ln-u-h1">Heading h1 (ln-u-h1)</p>
+///   <p class="ln-u-h2">Heading h2 (ln-u-h2)</p>
+///   <p class="ln-u-h3">Heading h3 (ln-u-h3)</p>
+///   <p class="ln-u-h4">Heading h4 (ln-u-h4)</p>
+///   <p class="ln-u-h5">Heading h5 (ln-u-h5)</p>
+///   <p class="ln-u-h6">Heading h6 (ln-u-h6)</p>
+///   <p class="ln-u-cta">CTA (ln-u-cta)</p>
+///   <p class="ln-u-body">Body copy (ln-u-body)</p>
+///   <p class="ln-u-body-sm">Small body copy (ln-u-body-sm)</p>
+/* stylelint-enable */
+    .ln-u-#{$key} {
+      @include ln-font($key);
+    }
+  }
+}
+
+@if ($use-ln-font-size) {
+  @each $font-key, $values in $ln-font-sizes {
+/* stylelint-disable */
+/// Sets the `font-size` to match the related key in the `$ln-fonts` list
+/// @name Size
+/// @example markup
+///   <p class="ln-u-font-size-h1">Heading h1 (ln-u-font-size-h1)</p>
+///   <p class="ln-u-font-size-h2">Heading h2 (ln-u-font-size-h2)</p>
+///   <p class="ln-u-font-size-h3">Heading h3 (ln-u-font-size-h3)</p>
+///   <p class="ln-u-font-size-h4">Heading h4 (ln-u-font-size-h4)</p>
+///   <p class="ln-u-font-size-h5">Heading h5 (ln-u-font-size-h5)</p>
+///   <p class="ln-u-font-size-h6">Heading h6 (ln-u-font-size-h6)</p>
+/* stylelint-enable */
+    .ln-u-font-size-#{$font-key} {
+      @each $breakpoint, $font-size in $values {
+        /* stylelint-disable max-nesting-depth */
+        @if $breakpoint == 'def' {
+          font-size: $font-size;
+        }
+
+        @else {
+          @include ln-respond-to($breakpoint) {
+            font-size: $font-size;
+          }
+        }
+        /* stylelint-enable */
+      }
+    }
+  }
+}
+
+@if $use-ln-font-styling {
+/* stylelint-disable */
+/// Utility classes to set the `font-weight` for an element with the value derived from the
+/// `$ln-font-weight-[key]` settings
+/// @name Weight
+/// @example markup
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-font-weight-regular">ln-u-font-weight-regular</p>
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-font-weight-medium">ln-u-font-weight-medium</p>
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-font-weight-bold">ln-u-font-weight-bold</p>
+/* stylelint-enable */
+  .ln-u-font-weight-regular {
+    font-weight: $ln-font-weight-regular !important;
+  }
+
+  .ln-u-font-weight-medium {
+    font-weight: $ln-font-weight-medium !important;
+  }
+
+  .ln-u-font-weight-bold {
+    font-weight: $ln-font-weight-bold !important;
+  }
+
+/* stylelint-disable */
+/// Utility classes to control the `text-decoration` & `font-style` of an element
+/// @name Styling
+/// @example markup
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-text-decoration-underline">ln-u-text-decoration-underline</p>
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-text-decoration-normal">ln-u-text-decoration-normal</p>
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-text-style-italic">ln-u-text-style-italic</p>
+///   <p class="ln-u-display-inline-block ln-u-soft-right ln-u-font-style-normal">ln-u-font-style-normal</p>
+/* stylelint-enable */
+  .ln-u-text-decoration-underline {
+    text-decoration: underline !important;
+  }
+
+  .ln-u-text-decoration-normal {
+    text-decoration: none !important;
+  }
+
+  .ln-u-text-style-italic {
+    font-style: italic !important;
+  }
+
+  .ln-u-font-style-normal {
+    font-style: normal !important;
+  }
+}
+
+@if $use-ln-text-alignment {
+/* stylelint-disable */
+/// Sets the `text-alignment` on an element
+/// @name Alignment
+/// @example markup
+///   <p class="ln-u-text-align-center">ln-u-text-align-center</p>
+///   <p class="ln-u-text-align-right">ln-u-text-align-right</p>
+///   <p class="ln-u-text-align-left">ln-u-text-align-left</p>
+/* stylelint-enable */
+  .ln-u-text-align-center {
+    text-align: center !important;
+  }
+
+  .ln-u-text-align-right {
+    text-align: right !important;
+  }
+
+  .ln-u-text-align-left {
+    text-align: left !important;
+  }
+}
+
+@if $use-ln-font-family {
+  .ln-u-font-family-base {
+    font-family: $ln-font-family-base !important;
+  }
+
+  .ln-u-font-family-brand {
+    font-family: $ln-font-family-brand !important;
+  }
+}

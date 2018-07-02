@@ -1,0 +1,99 @@
+@mixin ln-c-accordion-build-segments {
+  background-color: $ln-color-white;
+  border-bottom: 1px solid $ln-color-base-border;
+
+  > .ln-c-accordion__head {
+    align-items: center;
+    color: $ln-color-black;
+    display: flex;
+    min-height: $ln-size-def;
+    padding-bottom: $ln-space;
+    padding-top: $ln-space;
+    position: relative;
+    vertical-align: middle;
+  }
+
+  > .ln-c-accordion__head > .ln-c-accordion__title {
+    @include ln-font('h5');
+    @include ln-soft-left;
+
+    display: inline-block;
+    margin-bottom: 0;
+    padding-right: $ln-space-x3;
+    // Needed to control width when inside of table
+    width: 100%;
+  }
+
+  > .ln-c-accordion__head > .ln-c-accordion__toggle {
+    display: block;
+  }
+
+  > .ln-c-accordion__body {
+    height: 0;
+    overflow: hidden;
+  }
+
+  &.is-open {
+    > .ln-c-accordion__head > .ln-c-accordion__title {
+      color: $ln-color-alpha-dark;
+      font-weight: $ln-font-weight-bold;
+    }
+
+    > .ln-c-accordion__body {
+      height: auto;
+      overflow: visible;
+
+      @include ln-soft;
+    }
+
+    // reason: Requires the high-specificity selector below to allow nesting of foldable components.
+    // stylelint-disable-next-line
+    > .ln-c-accordion__head > .ln-c-accordion__toggle > .ln-c-accordion__icon {
+      transform: rotate(180deg) translateY(50%);
+    }
+  }
+
+  &.ln-c-accordion--standalone {
+    border-bottom: none;
+
+    &:first-child {
+      border-top: none;
+    }
+
+    @include ln-push-ends;
+  }
+}
+
+@if $use-ln-accordion {
+  .ln-c-accordion:not([class*='ln-c-accordion@']) {
+    @include ln-c-accordion-build-segments;
+  }
+
+  @each $key, $value in $ln-breakpoints {
+    .ln-c-accordion\@max-#{$key} {
+      @include ln-respond-to('max-#{$key}') {
+        @include ln-c-accordion-build-segments;
+      }
+    }
+  }
+
+  .ln-c-accordion__toggle {
+    background: transparent;
+    bottom: 0;
+    color: currentColor;
+    cursor: pointer;
+    display: none;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .ln-c-accordion__icon {
+    position: absolute;
+    right: $ln-space-x2;
+    top: 50%;
+    transform: rotate(0) translateY(-50%);
+  }
+}

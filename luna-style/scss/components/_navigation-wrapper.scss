@@ -1,0 +1,68 @@
+@mixin ln-navbar-border($height) {
+  // Creates repeating faux border matching the navigation-height.  Makes it flexible to give appropriate repeating borders when the navigation jumps below the title.
+  background-color: $ln-color-white;
+  background-image:
+    repeating-linear-gradient(
+      $ln-color-white 0,
+      $ln-color-white ($height - 1px),
+      $ln-color-nav-border ($height - 1px),
+      $ln-color-nav-border $height
+    );
+
+  @media all and (min-width: 0\0) and (min-resolution: 0.001dpcm) {
+    // MQ targets IE9 which does not support repeating gradients.
+    border-bottom: 1px solid $ln-color-nav-border;
+  }
+}
+
+@if $use-ln-navigation-wrapper {
+  .ln-c-navigation-wrapper {
+    @include ln-clearfix;
+    @include ln-push-left('def', false, true);
+
+    @include ln-respond-to('nav') {
+      line-height: $ln-navigation-height;
+      margin-left: 0;
+
+      @include ln-navbar-border($ln-navigation-height);
+    }
+  }
+
+  .ln-c-navigation-wrapper__inner {
+    @include ln-respond-to('max-nav') {
+      clear: left;
+      display: flex;
+      flex-flow: row wrap;
+      max-width: 100%;
+      width: $ln-navigation-collapsed-width;
+    }
+  }
+
+  .ln-c-navigation-wrapper__title {
+    color: $ln-color-alpha;
+    margin-bottom: 0;
+    padding-right: $ln-space-x2;
+    position: relative;
+    white-space: nowrap;
+    z-index: 1;
+
+    @include ln-font('h2');
+
+    @include ln-respond-to('lg') {
+      padding-right: $ln-space-x3;
+    }
+
+    @include ln-respond-to('max-nav') {
+      background: $ln-navigation-background-color;
+      line-height: $ln-navigation-collapsed-height;
+      text-indent: $ln-space;
+
+      @include ln-navbar-border($ln-navigation-collapsed-height);
+    }
+
+    @include ln-respond-to('nav') {
+      float: left;
+      line-height: $ln-navigation-height;
+    }
+  }
+}

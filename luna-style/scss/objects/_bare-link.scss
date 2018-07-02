@@ -1,0 +1,14 @@
+@if $use-ln-bare-link {
+  .ln-o-bare-link {
+    color: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    text-decoration: inherit;
+
+    &:hover,
+    &:focus {
+      color: inherit;
+      text-decoration: underline;
+    }
+  }
+}

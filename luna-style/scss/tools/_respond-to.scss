@@ -1,0 +1,51 @@
+/// Generates a media query based on the key passed in the first argument. An optional second
+/// argument takes a Sass map with corresponding keys; this defaults to
+/// [`$ln-breakpoints`](https://github.com/JSainsburyPLC/luna-style/tree/master/scss/settings#globals).
+///
+/// The first argument can be used to generate a `min-width` or `max-width` media query by
+/// prepending the key with either `min-` or `max-`.  If just the key is passed for example `md`
+/// the media query will default to `min-width`
+/// @group mixins
+/// @param {Breakpoint} $ln-breakpoint - should match the breakpoints specified in $ln-breakpoints or the provided map.
+///   - Can accept prefixes for `min-` and `max-` for min/max width media queries, default is min-width.
+/// @param {Map} $ln-breakpoints-map [$ln-breakpoints] - Map containing the $ln-breakpoint breakpoint definition.
+/// @example scss - Example input
+///   @include ln-respond-to('max-sm') {...}
+///   @include ln-respond-to('md') {...}
+///   @include ln-respond-to('nav', $component-breakpoints) {...}
+@mixin ln-respond-to($ln-breakpoint, $ln-breakpoints-map: $ln-breakpoints) {
+  @if map-has-key($ln-breakpoints-map, $ln-breakpoint) {
+    @media (min-width: #{map-get($ln-breakpoints-map, $ln-breakpoint)}) {
+      @content;
+    }
+  }
+
+  @else {
+    @if (str-index($ln-breakpoint, 'max-')) {
+      $ln-bp: ln-str-replace($ln-breakpoint, 'max-', '');
+
+      @if map-has-key($ln-breakpoints-map, $ln-bp) {
+        /* stylelint-disable-next-line max-nesting-depth */
+        @media (max-width: #{(map-get($ln-breakpoints-map, $ln-bp)-1)}) {
+          @content;
+        }
+      }
+    }
+
+    @else if (str-index($ln-breakpoint, 'min-')) {
+      $ln-bp: ln-str-replace($ln-breakpoint, 'min-', '');
+
+      @if map-has-key($ln-breakpoints-map, $ln-bp) {
+        /* stylelint-disable-next-line max-nesting-depth */
+        @media (min-width: #{map-get($ln-breakpoints-map, $ln-bp)}) {
+          @content;
+        }
+      }
+    }
+
+    @else {
+      @warn 'Unfortunately, no value could be retrieved from `#{$ln-breakpoint}`. '
+        + 'Please make sure it is defined in the breakpoints map.';
+    }
+  }
+}

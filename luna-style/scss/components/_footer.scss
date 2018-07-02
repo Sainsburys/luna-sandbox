@@ -1,0 +1,6 @@
+.ln-c-footer {
+  background-color: $ln-color-grey-dark;
+  color: $ln-color-white;
+
+  @include ln-soft;
+}

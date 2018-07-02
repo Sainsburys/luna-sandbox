@@ -1,0 +1,49 @@
+////
+/// @group utilities/layout
+////
+@mixin ln-u-display-build-utility($display-value) {
+  .ln-u-display-#{$display-value} {
+    display: $display-value !important;
+  }
+
+  /* stylelint-disable max-nesting-depth */
+  @if $use-ln-display-responsive {
+    @each $key, $value in $ln-breakpoints {
+      .ln-u-display-#{$display-value}\@#{$key} {
+        @include ln-respond-to('min-#{$key}') {
+          display: $display-value !important;
+        }
+      }
+    }
+  }
+  /* stylelint-enable max-nesting-depth */
+}
+
+@if $use-ln-display {
+/* stylelint-disable */
+/// Offers all `display:` properties as a standard utility class and also responsive variant
+/// @name Display
+/// @example markup
+///   <div class="ln-u-display-none ln-u-display-block@md">
+///     Hidden for small divices but visible on medium screens
+///   </div>
+/* stylelint-enable */
+  $display-values: none, inline, inline-block, block, table, table-cell, table-row, flex, inline-flex;
+
+  @each $display-value in $display-values {
+    @include ln-u-display-build-utility($display-value);
+  }
+}
+
+@if $use-ln-center-block {
+/* stylelint-disable */
+/// Centers the element by adding `auto` to the horizontal margins
+/// @name Center block
+/// @example markup
+///   <div class="ln-u-display-center-block">Center block</div>
+/* stylelint-enable */
+  .ln-u-center-block {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}

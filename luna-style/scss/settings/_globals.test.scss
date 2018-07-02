@@ -1,0 +1,10 @@
+@if ($ln-tests-enabled) {
+  @include describe('settings/global') {
+    @include it('defines $ln-browser-font-size-default') {
+      @include assert-equal(
+        $ln-browser-font-size-default,
+        16
+      );
+    }
+  }
+}

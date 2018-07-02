@@ -1,0 +1,8 @@
+@if $use-ln-sainsburys-icon {
+  .ln-c-sainsburys-icon {
+    display: block;
+    height: 19px;
+    // magic numbers to give the icon some size.
+    width: 95px;
+  }
+}

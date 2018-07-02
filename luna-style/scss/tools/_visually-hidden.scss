@@ -1,0 +1,44 @@
+/// Visually hides a component (visually meaning that it's still accessible to screen reader technology).
+/// @group mixins
+/// @param {Bool} $important - will add `!important` to all the generated CSS properties.  This is rarely required, however it can bypass specificity issues that you might incur.
+/// @param {Bool} $undo - will reverse the function and render the component visible.
+/// @link https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe `nowrap` prevents text from being condensed
+/// @link https://developer.mozilla.org/en-US/docs/Web/CSS/clip `clip` is deprecated but works everywhere
+/// @link https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path `clip-path` is the future-proof version, but not very well supported yet.
+/// @example scss - Example input
+///   .my-component {
+///     @include ln-visually-hidden;
+///
+///     &.is-open {
+///       @include ln-visually-hidden(false, true);
+///     }
+///   }
+@mixin ln-visually-hidden($important: false, $undo: false) {
+  $important-str: '';
+
+  @if ($important) {
+    $important-str: '!important';
+  }
+
+  @if ($undo) {
+    clip: auto #{$important-str};
+    clip-path: none #{$important-str};
+    height: auto #{$important-str};
+    overflow: visible #{$important-str};
+    position: static #{$important-str};
+    white-space: normal #{$important-str};
+    width: auto #{$important-str};
+  }
+
+  @else {
+    border: 0 #{$important-str};
+    clip: rect(1px, 1px, 1px, 1px) #{$important-str};
+    clip-path: inset(50%) #{$important-str}; // 50% is shorthand for clipping 100% of the x and y axis
+    height: 1px #{$important-str};
+    overflow: hidden #{$important-str};
+    padding: 0 #{$important-str};
+    position: absolute #{$important-str};
+    white-space: nowrap #{$important-str};
+    width: 1px #{$important-str};
+  }
+}

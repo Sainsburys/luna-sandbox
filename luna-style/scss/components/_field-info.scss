@@ -1,0 +1,44 @@
+@if $use-ln-field-info {
+  .ln-c-form-group.has-error,
+  .ln-c-form-group.has-warning {
+    display: flex;
+    flex-flow: column;
+  }
+
+  .ln-c-field-info {
+    @include ln-font-size('body-sm');
+
+    margin-bottom: $ln-space;
+  }
+
+  .ln-c-field-info--error {
+    font-weight: bold;
+    order: 1;
+    padding-top: $ln-space;
+
+    &.ln-c-field-info--validation-first {
+      order: 0;
+      padding-top: 0;
+    }
+  }
+
+  .ln-c-field-info--error::before {
+    $size: 20px;
+
+    background: $ln-color-warning;
+    border-radius: 50%;
+    color: $ln-color-white;
+    content: '!';
+    display: inline-block;
+    font-family: $ln-font-family-brand;
+    height: $size;
+    line-height: 1.4;
+    margin-right: $ln-space;
+    text-align: center;
+    width: $size;
+
+    .ln-c-form-group.has-error & {
+      background: $ln-color-error;
+    }
+  }
+}

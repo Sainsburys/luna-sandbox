@@ -1,0 +1,69 @@
+@if $use-ln-loading-indicator {
+  $bar-height: (20 / $ln-browser-font-size-default) * 1rem;
+  $bar-width: (8 / $ln-browser-font-size-default) * 1rem;
+  $gap-width: (4 / $ln-browser-font-size-default) * 1rem;
+  $animation-delay: 0.25s;
+
+  .ln-c-loading-indicator {
+    font-size: 0;
+    position: relative;
+    white-space: nowrap;
+    width: (($bar-width * 3) + ($gap-width * 2));
+
+    @include ln-push-right;
+  }
+
+  .ln-c-loading-indicator__bar,
+  .ln-c-loading-indicator__bar::before,
+  .ln-c-loading-indicator__bar::after {
+    animation: fadeinout 1.5s infinite;
+    background-color: transparent;
+    height: $bar-height;
+    width: $bar-width;
+
+    .ln-c-loading-indicator--inverted & {
+      animation-name: fadeinout-inverted;
+    }
+  }
+
+  @media all and (min-width: 0\0) {
+    // Show a static loading indicator to IE9 users.
+    .ln-c-loading-indicator__bar {
+      background-color: rgba($ln-color-alpha, 0.33);
+    }
+
+    .ln-c-loading-indicator__bar::before {
+      background-color: rgba($ln-color-alpha, 0.66);
+    }
+
+    .ln-c-loading-indicator__bar::after {
+      background-color: $ln-color-alpha;
+    }
+  }
+
+  .ln-c-loading-indicator__bar::before,
+  .ln-c-loading-indicator__bar::after {
+    bottom: 0;
+    content: ' ';
+    position: absolute;
+    top: 0;
+  }
+
+  .ln-c-loading-indicator__bar::before {
+    animation-delay: $animation-delay;
+    left: ($bar-width + $gap-width);
+  }
+
+  .ln-c-loading-indicator__bar::after {
+    animation-delay: ($animation-delay * 2);
+    right: 0;
+  }
+
+  @keyframes fadeinout {
+    50% { background-color: $ln-color-alpha; }
+  }
+
+  @keyframes fadeinout-inverted {
+    50% { background-color: $ln-color-white; }
+  }
+}

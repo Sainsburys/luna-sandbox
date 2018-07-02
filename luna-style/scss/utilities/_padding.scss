@@ -1,0 +1,162 @@
+////
+/// @group utilities/padding
+////
+
+@if $use-ln-soft {
+/* stylelint-disable */
+/// Adds `$ln-scaled-space` padding to the specified side which changes in
+/// relation to the device breakpoint, with variants of `$ln-scaled-space`
+/// available.
+/// @name Soft
+/// @example markup - Default
+///   <div class="ln-u-soft">ln-u-soft</div>
+///   <div class="ln-u-soft-top">ln-u-soft-top</div>
+///   <div class="ln-u-soft-right">ln-u-soft-right</div>
+///   <div class="ln-u-soft-bottom">ln-u-soft-bottom</div>
+///   <div class="ln-u-soft-left">ln-u-soft-bottom</div>
+///   <div class="ln-u-soft-sides">ln-u-soft-sides</div>
+///   <div class="ln-u-soft-ends">ln-u-soft-ends</div>
+/// @example markup - sm
+///   <div class="ln-u-soft-sm">ln-u-soft-sm</div>
+/// @example markup - lg
+///   <div class="ln-u-soft-lg">ln-u-soft-lg</div>
+/// @example markup - xl
+///   <div class="ln-u-soft-xl">ln-u-soft-xl</div>
+/* stylelint-enable */
+  @each $key, $value in $ln-scaled-space {
+    $suffix: '';
+
+    @if ($key != 'def') { $suffix: '-#{$key}'; }
+
+    .ln-u-soft#{$suffix} {
+      @include ln-soft($key, true);
+    }
+
+    .ln-u-soft-top#{$suffix} {
+      @include ln-soft-top($key, true);
+    }
+
+    .ln-u-soft-right#{$suffix} {
+      @include ln-soft-right($key, true);
+    }
+
+    .ln-u-soft-bottom#{$suffix} {
+      @include ln-soft-bottom($key, true);
+    }
+
+    .ln-u-soft-left#{$suffix} {
+      @include ln-soft-left($key, true);
+    }
+
+    .ln-u-soft-sides#{$suffix} {
+      @include ln-soft-sides($key, true);
+    }
+
+    .ln-u-soft-ends#{$suffix} {
+      @include ln-soft-ends($key, true);
+    }
+  }
+}
+
+@if $use-ln-hard {
+/* stylelint-disable */
+/// Removes any padding from the specified side
+/// @name Hard
+/// @example markup
+///   <div class="ln-u-hard">ln-u-hard</div>
+///   <div class="ln-u-hard-top">ln-u-hard-top</div>
+///   <div class="ln-u-hard-right">ln-u-hard-right</div>
+///   <div class="ln-u-hard-bottom">ln-u-hard-bottom</div>
+///   <div class="ln-u-hard-left">ln-u-hard-bottom</div>
+///   <div class="ln-u-hard-sides">ln-u-hard-sides</div>
+///   <div class="ln-u-hard-ends">ln-u-hard-ends</div>
+/* stylelint-enable */
+  .ln-u-hard {
+    padding: 0 !important;
+  }
+
+  .ln-u-hard-top {
+    padding-top: 0 !important;
+  }
+
+  .ln-u-hard-right {
+    padding-right: 0 !important;
+  }
+
+  .ln-u-hard-bottom {
+    padding-bottom: 0 !important;
+  }
+
+  .ln-u-hard-left {
+    padding-left: 0 !important;
+  }
+
+  .ln-u-hard-sides {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .ln-u-hard-ends {
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+  }
+}
+
+@if $use-ln-padding {
+/* stylelint-disable */
+/// Adds `$ln-fixed-space` padding to the specified side which matches a
+/// the `$ln-space` value, with multiplier variations available.
+/// @name Padding
+/// @example markup - Default
+///   <div class="ln-u-padding">ln-u-padding</div>
+///   <div class="ln-u-padding-top">ln-u-padding-top</div>
+///   <div class="ln-u-padding-right">ln-u-padding-right</div>
+///   <div class="ln-u-padding-bottom">ln-u-padding-bottom</div>
+///   <div class="ln-u-padding-left">ln-u-padding-bottom</div>
+///   <div class="ln-u-padding-sides">ln-u-padding-sides</div>
+///   <div class="ln-u-padding-ends">ln-u-padding-ends</div>
+/// @example markup - 1/2 * ln-space
+///   <div class="ln-u-padding*1/2">ln-u-padding*1/2</div>
+/// @example markup - 2 * ln-space
+///   <div class="ln-u-padding*2">ln-u-padding*2</div>
+/// @example markup - 3 * ln-space
+///   <div class="ln-u-padding*3">ln-u-padding*3</div>
+/// @example markup - 4 * ln-space
+///   <div class="ln-u-padding*4">ln-u-padding*4</div>
+/* stylelint-enable */
+  @each $key, $value in $ln-fixed-space {
+    $suffix: '';
+
+    @if ($key != 'def') { $suffix: '#{$key}'; }
+
+    .ln-u-padding#{$suffix} {
+      padding: $value !important;
+    }
+
+    .ln-u-padding-top#{$suffix} {
+      padding-top: $value !important;
+    }
+
+    .ln-u-padding-right#{$suffix} {
+      padding-right: $value !important;
+    }
+
+    .ln-u-padding-bottom#{$suffix} {
+      padding-bottom: $value !important;
+    }
+
+    .ln-u-padding-left#{$suffix} {
+      padding-left: $value !important;
+    }
+
+    .ln-u-padding-sides#{$suffix} {
+      padding-left: $value !important;
+      padding-right: $value !important;
+    }
+
+    .ln-u-padding-ends#{$suffix} {
+      padding-bottom: $value !important;
+      padding-top: $value !important;
+    }
+  }
+}

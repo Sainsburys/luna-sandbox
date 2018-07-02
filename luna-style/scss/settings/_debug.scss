@@ -1,0 +1,37 @@
+// Disabling linting as it's just code for testing
+/* stylelint-disable color-named  */
+
+$ln-debug-all-classes: false !default;
+$ln-debug-color-all-classes: lightgrey !default;
+
+$ln-debug-all-ids: false !default;
+$ln-debug-color-all-ids: black !default;
+
+$ln-debug-objects: false !default;
+$ln-debug-color-objects: red !default;
+
+$ln-debug-grid: false !default;
+$ln-debug-color-grid: blue !default;
+
+$ln-debug-components: false !default;
+$ln-debug-color-components: green !default;
+
+$ln-debug-utilities: false !default;
+$ln-debug-color-utilities: purple !default;
+
+$ln-debug-bem-children: false !default;
+$ln-debug-color-bem-children: orange !default;
+
+$ln-debug-bem-modifiers: false !default;
+$ln-debug-color-bem-modifiers: teal !default;
+
+$ln-debug-responsive-suffixes: false !default;
+$ln-debug-color-responsive-suffixes: rosybrown !default;
+
+$ln-debug-dividing-suffixes: false !default;
+$ln-debug-color-dividing-suffixes: pink !default;
+
+$ln-debug-multiplying-suffixes: true !default;
+$ln-debug-color-multiplying-suffixes: yellow !default;
+
+/* stylelint-enable */

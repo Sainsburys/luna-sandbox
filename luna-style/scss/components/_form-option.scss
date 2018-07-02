@@ -1,0 +1,170 @@
+@if $use-ln-form-option {
+  $icon-size: 24px;
+  $radio-dot-size: 14px;
+  $highlight-color: $ln-color-alpha;
+  $highlight-disabled-color: $ln-color-grey-light;
+
+  .ln-c-form-option {
+    align-items: center;
+    display: flex;
+    min-height: $ln-size-def;
+  }
+
+  .ln-c-form-option__input {
+    @include ln-visually-hidden(false);
+  }
+
+  .ln-c-form-option__label {
+    color: $ln-color-grey-dark;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: $ln-size-def;
+    padding: $ln-space $ln-space-x2;
+    padding-left: calc(#{$icon-size} + #{$ln-space-x4});
+    position: relative;
+    vertical-align: middle;
+
+    &::before {
+      background-color: $ln-color-white;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: 50% 50%;
+      border: 1px solid $ln-color-input-border;
+      content: ' ';
+      height: $icon-size;
+      left: $ln-space-x2;
+      position: absolute;
+      top: calc(50% - #{$icon-size / 2});
+      width: $icon-size;
+    }
+
+    .ln-c-form-option--radio &::after {
+      border-radius: 50%;
+      content: ' ';
+      height: $radio-dot-size;
+      left: calc(#{$ln-space-x2} + #{($icon-size - $radio-dot-size) / 2});
+      position: absolute;
+      top: calc(50% - #{$radio-dot-size / 2});
+      width: $radio-dot-size;
+    }
+
+    .ln-c-form-option--full & {
+      width: 100%;
+    }
+  }
+
+  .ln-c-form-option__input:not([disabled]) ~ .ln-c-form-option__label {
+    &:hover,
+    &:focus {
+      background-color: $ln-color-highlight-background;
+
+      &::before {
+        border-width: 2px;
+      }
+    }
+  }
+
+  .ln-c-form-option--radio .ln-c-form-option__label::before {
+    border-radius: 100%;
+  }
+
+  .ln-c-form-option__label::before {
+    .ln-c-form-group.has-error & {
+      border-color: $ln-color-error;
+    }
+
+    .ln-c-form-group.has-warning & {
+      border-color: $ln-color-warning;
+    }
+  }
+
+  .ln-c-form-option__input:checked {
+    .ln-c-form-option--checkbox & ~ .ln-c-form-option__label {
+      &::before {
+        background-color: $highlight-color;
+        background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNCAxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8dGl0bGU+CiAgICBMaW5lCiAgPC90aXRsZT4KICA8cGF0aCBkPSJNMSA2LjcxNGw0IDRMMTIuNzE0IDEiIHN0cm9rZT0iI0ZGRiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4=');
+        background-size: 70%;
+        border-color: $highlight-color;
+
+        // stylelint-disable-next-line
+        .ln-c-form-group.has-error & {
+          background-color: $ln-color-error;
+          border-color: $ln-color-error;
+        }
+
+        // stylelint-disable-next-line
+        .ln-c-form-group.has-warning & {
+          background-color: $ln-color-warning;
+          border-color: $ln-color-warning;
+        }
+      }
+
+      &:hover::before,
+      &:focus::before {
+        border-width: 1px;
+      }
+    }
+
+    .ln-c-form-option--radio & ~ .ln-c-form-option__label {
+      &::before {
+        border-color: $highlight-color;
+        border-width: 2px;
+
+        // stylelint-disable-next-line
+        .ln-c-form-group.has-error & {
+          border-color: $ln-color-error;
+        }
+
+        // stylelint-disable-next-line
+        .ln-c-form-group.has-warning & {
+          border-color: $ln-color-warning;
+        }
+      }
+
+      &::after {
+        background-color: $highlight-color;
+
+        // stylelint-disable-next-line
+        .ln-c-form-group.has-error & {
+          background-color: $ln-color-error;
+        }
+
+        // stylelint-disable-next-line
+        .ln-c-form-group.has-warning & {
+          background-color: $ln-color-warning;
+        }
+      }
+    }
+  }
+
+  .ln-c-form-option__input:checked[disabled] {
+    .ln-c-form-option--checkbox & ~ .ln-c-form-option__label::before,
+    .ln-c-form-option--radio & ~ .ln-c-form-option__label::after {
+      background-color: $highlight-disabled-color;
+      border-color: $highlight-disabled-color;
+    }
+
+    .ln-c-form-option--radio & ~ .ln-c-form-option__label::before {
+      border-color: $highlight-disabled-color;
+    }
+  }
+
+  .ln-c-form-option__input[disabled] ~ .ln-c-form-option__label {
+    cursor: not-allowed;
+
+    &::before {
+      background-color: $ln-color-grey-v-light;
+    }
+  }
+
+  .ln-c-form-option__input:focus ~ .ln-c-form-option__label::before {
+    outline: 1px dotted #000;
+    // WebKit gets its native focus styles.
+    /* stylelint-disable media-feature-name-no-vendor-prefix */
+    @media (-webkit-min-device-pixel-ratio: 0) {
+      /* stylelint-enable */
+      outline: -webkit-focus-ring-color auto 5px;
+    }
+  }
+}

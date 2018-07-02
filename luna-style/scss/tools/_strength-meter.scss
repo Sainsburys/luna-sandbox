@@ -1,0 +1,52 @@
+// This array will define the amount of levels for the strength meter.
+$ln-strength-meter-colors: ($ln-color-red, $ln-color-orange, $ln-color-yellow, $ln-color-green);
+
+// Color for the borders in between strength levels.
+$gap-color: transparent;
+
+// Nesting depth > 1 is necessary in functions
+/* stylelint-disable max-nesting-depth */
+
+@function ln-get-strength-meter-colours($meter-level) {
+  $total-colors: length($ln-strength-meter-colors);
+  $percentage: 100 / $total-colors;
+  $color-range: ();
+
+  // For each cycle, it will add 4 values into the color-range array.
+  // First 2 correspond to a range of either the colour or default colour.
+  // Last 2 will be the gaps between colours.
+  @for $i from 0 to $total-colors {
+    $current-color: '';
+
+    // Will pick either color or else default color
+    @if ($i < $meter-level) {
+      $current-color: nth($ln-strength-meter-colors, $i+1);
+    }
+
+    @else {
+      $current-color: $ln-color-password-meter-default;
+    }
+
+    // 1 of 4 color or default
+    $color-range: append($color-range, $current-color ($i * $percentage) * 1%, comma);
+
+    // 2 of 4 color or default
+    @if $i < $total-colors - 1 {
+      $color-range: append($color-range, $current-color ((($i+1) * $percentage) - 0.25) * 1%, comma);
+    }
+
+    @else {
+      $color-range: append($color-range, $current-color (($i+1) * $percentage) * 1%, comma);
+    }
+
+    // 3 and 4 of 4. Transparent gaps
+    @if $i < $total-colors - 1 {
+      $color-range: append($color-range, $gap-color ((($i+1) * $percentage) - 0.25) * 1%, comma);
+      $color-range: append($color-range, $gap-color (($i+1) * $percentage) * 1%, comma);
+    }
+  }
+
+  @return ($color-range);
+}
+
+/* stylelint-enable */

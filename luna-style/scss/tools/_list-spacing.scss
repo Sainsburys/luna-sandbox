@@ -1,0 +1,42 @@
+@mixin ln-list-spacing($class, $side) {
+  $modifier: '--spaced';
+
+  @if $class == 'matrix-list' {
+    $modifier: '';
+  }
+  $compound-class: 'ln-o-#{$class}#{$modifier}';
+
+  @each $key, $breakpoints in $ln-list-spacing {
+    $compound-class: 'ln-o-#{$class}#{$modifier}-#{$key}';
+
+    @if $key == 'def' {
+      $compound-class: 'ln-o-#{$class}#{$modifier}';
+    }
+
+    @each $bp, $value in $breakpoints {
+      /* stylelint-disable max-nesting-depth */
+      @if $bp == 'def' {
+        .#{$compound-class} {
+          margin-#{$side}: -$value;
+        }
+
+        .#{$compound-class} > .ln-o-#{$class}__item {
+          padding-#{$side}: $value;
+        }
+      }
+
+      @else {
+        @include ln-respond-to($bp) {
+          .#{$compound-class} {
+            margin-#{$side}: -$value;
+          }
+
+          .#{$compound-class} > .ln-o-#{$class}__item {
+            padding-#{$side}: $value;
+          }
+        }
+      }
+      /* stylelint-enable max-nesting-depth */
+    }
+  }
+}

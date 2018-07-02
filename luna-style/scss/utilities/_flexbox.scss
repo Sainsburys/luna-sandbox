@@ -1,0 +1,65 @@
+////
+/// @group utilities/flexbox
+////
+
+@if $use-ln-flexbox {
+/* stylelint-disable */
+/// Direction of flex items
+/// @name Direction
+/* stylelint-enable */
+  .ln-u-flex-direction-row { flex-direction: row !important; }
+  .ln-u-flex-direction-row-reverse { flex-direction: row-reverse !important; }
+  .ln-u-flex-direction-col { flex-direction: column !important; }
+  .ln-u-flex-direction-col-reverse { flex-direction: column-reverse !important; }
+
+/* stylelint-disable */
+/// Flex items wrap
+/// @name Wrap
+/* stylelint-enable */
+  .ln-u-flex-wrap-nowrap { flex-wrap: nowrap !important; }
+  .ln-u-flex-wrap { flex-wrap: wrap !important; }
+  .ln-u-flex-wrap-reverse { flex-wrap: wrap-reverse !important; }
+
+/* stylelint-disable */
+/// Flex items positioning along the container's main axis
+/// @name Justify content
+/* stylelint-enable */
+  .ln-u-justify-content-flex-start { justify-content: flex-start !important; }
+  .ln-u-justify-content-center { justify-content: center !important; }
+  .ln-u-justify-content-flex-end { justify-content: flex-end !important; }
+  .ln-u-justify-content-space-between { justify-content: space-between !important; }
+  .ln-u-justify-content-space-around { justify-content: space-around !important; }
+
+/* stylelint-disable */
+/// Flex items positioning along the container's cross axis
+/// @name Align items
+/* stylelint-enable */
+  .ln-u-align-items-stretch { align-items: stretch !important; }
+  .ln-u-align-items-flex-start { align-items: flex-start !important; }
+  .ln-u-align-items-center { align-items: center !important; }
+  .ln-u-align-items-flex-end { align-items: flex-end !important; }
+  .ln-u-align-items-baseline { align-items: baseline !important; }
+
+/* stylelint-disable */
+/// Individual flex item positioning along the container's cross axis
+/// @name Align self
+/* stylelint-enable */
+  .ln-u-align-self-auto { align-self: auto !important; }
+  .ln-u-align-self-flex-start { align-self: flex-start !important; }
+  .ln-u-align-self-center { align-self: center !important; }
+  .ln-u-align-self-flex-end { align-self: flex-end !important; }
+  .ln-u-align-self-stretch { align-self: stretch !important; }
+
+/* stylelint-disable */
+/// Controls how flex items grow and shrink
+/// @name Flex, grow & shrink
+/* stylelint-enable */
+  .ln-u-flex-initial { flex: initial !important; }
+  .ln-u-flex-1 { flex: 1 !important; }
+  .ln-u-flex-auto { flex: auto !important; }
+  .ln-u-flex-none { flex: none !important; }
+  .ln-u-flex-grow { flex-grow: 1 !important; }
+  .ln-u-flex-shrink { flex-shrink: 1 !important; }
+  .ln-u-flex-grow-none { flex-grow: 0 !important; }
+  .ln-u-flex-shrink-none { flex-shrink: 0 !important; }
+}

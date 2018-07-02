@@ -1,0 +1,13 @@
+@if $use-ln-clearfix {
+  /*
+  The clearfix object allows you to easily restore the height of a wrapping
+  element when its children are floated. It should only be used when floating
+  is the only simple option available. Where possible, use inline-block.
+  */
+
+  .ln-o-clearfix::after {
+    clear: both;
+    content: '';
+    display: table;
+  }
+}
