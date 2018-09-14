@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { Container, Card } from '../luna-react/lib'
+import { Container, Card } from '../luna-react'
 
 import './index.scss'
 
