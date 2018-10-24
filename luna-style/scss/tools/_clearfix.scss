@@ -1,7 +1,0 @@
-@mixin ln-clearfix() {
-  &::before {
-    clear: both;
-    content: ' ';
-    display: table;
-  }
-}

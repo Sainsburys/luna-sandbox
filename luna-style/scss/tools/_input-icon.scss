@@ -1,7 +1,0 @@
-@mixin ln-input-icon($direction, $icon) {
-  padding-#{$direction}: $ln-space-x2 * 2.5; // magic number, ensures text doesn't flow too close to the icon
-  background-image: url('data:image/svg+xml;base64,#{$icon}');
-  background-position: $direction $ln-space-x2 top 50%;
-  background-repeat: no-repeat;
-  background-size: auto 35%;
-}

@@ -1,7 +1,7 @@
-import { compose, setDisplayName, mapProps, withState, withHandlers, withPropsOnChange, withProps, setPropTypes } from 'recompose';
-import classnames from 'classnames';
-import React, { Component, Fragment, Children, cloneElement } from 'react';
 import uniqueId from 'lodash.uniqueid';
+import { compose, setDisplayName, mapProps, withProps, withState, withHandlers, withPropsOnChange, setPropTypes } from 'recompose';
+import classnames from 'classnames';
+import React, { Children, Fragment, Component, cloneElement, PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import debounce from 'lodash.debounce';
@@ -54,9 +54,13 @@ function _assertThisInitialized(self) {
   return self;
 }
 
+var uuid = (function (prefix) {
+  return uniqueId(prefix);
+});
+
 var addLunaClass = function addLunaClass(props) {
   return _extends({}, props, {
-    className: classnames(props.className, 'ln-c-icon', props.fixed && 'ln-c-icon--fixed'),
+    className: classnames(props.className, 'ln-c-icon', props.fixed && 'ln-c-icon--fixed', props.size && "ln-c-icon--" + props.size),
     fixed: undefined
   });
 };
@@ -102,93 +106,226 @@ var filterProps = (function (props, filterList) {
   }, {});
 });
 
-var getUniqueId = (function (prefix) {
-  return uniqueId(prefix);
-});
+/**
+ * Represents a single item in an accordion.
+ * Wrap in [`Accordion`](#/Components/Accordion?id=accordion-1) for state management.
+ */
 
-var createIds = (function (_ref) {
-  var ids = _ref.ids;
-  return ids || {
-    ids: {
-      title: getUniqueId('ln-accordion-title-'),
-      section: getUniqueId('ln-accordion-section-')
-    }
-  };
-});
-
-var clickHandler = (function (_ref) {
-  var setOpenState = _ref.setOpenState;
-  return function (currentState) {
-    return setOpenState(!currentState);
-  };
-});
-
-var Accordion = function Accordion(_ref) {
+var AccordionItem = function AccordionItem(_ref) {
   var children = _ref.children,
       className = _ref.className,
       title = _ref.title,
       titleElement = _ref.titleElement,
-      open = _ref.open,
+      defaultOpen = _ref.defaultOpen,
+      propsOpen = _ref.open,
       standalone = _ref.standalone,
-      ids = _ref.ids,
+      id = _ref.id,
+      onClick = _ref.onClick,
       handleClick = _ref.handleClick,
-      rest = _objectWithoutPropertiesLoose(_ref, ["children", "className", "title", "titleElement", "open", "standalone", "ids", "handleClick"]);
+      respondAt = _ref.respondAt,
+      rest = _objectWithoutPropertiesLoose(_ref, ["children", "className", "title", "titleElement", "defaultOpen", "open", "standalone", "id", "onClick", "handleClick", "respondAt"]);
 
   var Heading = titleElement;
-  return React.createElement("div", _extends({}, filterProps(rest, ['setOpenState', 'defaultOpen']), {
-    className: classnames('ln-c-accordion', className, open && 'is-open', standalone && 'ln-c-accordion--standalone')
+  var titleId = id;
+  var bodyId = id + "-body";
+  var clickHandler = onClick || handleClick;
+  var open = propsOpen !== undefined ? propsOpen : defaultOpen;
+  return React.createElement("div", _extends({}, filterProps(rest, ['multipleOpen']), {
+    className: classnames(!respondAt && 'ln-c-accordion', respondAt && "ln-c-accordion@max-" + respondAt, className, open && 'is-open', standalone && 'ln-c-accordion--standalone')
   }), React.createElement("div", {
     className: "ln-c-accordion__head"
   }, React.createElement("button", {
     className: "ln-c-accordion__toggle",
     type: "button",
-    onClick: function onClick() {
-      return handleClick(open);
+    onClick: clickHandler && function () {
+      return clickHandler(open);
     },
-    "aria-controls": ids.section,
+    "aria-controls": bodyId,
     "aria-expanded": open,
-    "aria-labelledby": ids.title
+    "aria-labelledby": titleId
   }, React.createElement(ArrowDown$1, {
     className: "ln-c-accordion__icon"
   })), React.createElement(Heading, {
     className: "ln-c-accordion__title",
-    id: ids.title
+    id: titleId
   }, title)), React.createElement("div", {
     className: "ln-c-accordion__body",
     role: "region",
-    "aria-labelledby": ids.title,
-    id: ids.section
-  }, open && children));
+    "aria-labelledby": titleId,
+    id: bodyId
+  }, (!!respondAt || open) && children));
 };
 
-Accordion.propTypes = {
+AccordionItem.propTypes = {
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
   title: PropTypes.node.isRequired,
   titleElement: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+  defaultOpen: PropTypes.bool,
   open: PropTypes.bool,
   standalone: PropTypes.bool,
-  ids: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    section: PropTypes.string.isRequired
-  }).isRequired,
-  handleClick: PropTypes.func.isRequired
+  id: PropTypes.string,
+  onClick: PropTypes.func,
+
+  /** @deprecated Use `onClick` */
+  handleClick: PropTypes.func,
+
+  /** Use to only show the content as an accordion until the specified breakpoint is reached */
+  respondAt: PropTypes.string
 };
-Accordion.defaultProps = {
+AccordionItem.defaultProps = {
   className: undefined,
   titleElement: 'h4',
-  open: false,
-  standalone: false
+  defaultOpen: false,
+  open: undefined,
+  standalone: false,
+  id: '',
+  onClick: undefined,
+  handleClick: undefined,
+  respondAt: undefined
+};
+AccordionItem.displayName = 'AccordionItem';
+
+var Accordion =
+/*#__PURE__*/
+function (_Component) {
+  _inheritsLoose(Accordion, _Component);
+
+  function Accordion(props) {
+    var _this;
+
+    _this = _Component.call(this, props) || this;
+    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.state = {
+      hasInteracted: false,
+      openItems: {}
+    };
+    _this.uuid = "ln-accordion-" + uuid();
+    return _this;
+  }
+
+  var _proto = Accordion.prototype;
+
+  _proto.getChildren = function getChildren() {
+    if (this.props.title) {
+      return React.createElement(AccordionItem, _extends({}, this.props, {
+        id: this.getItemId(this.props.id, 0)
+      }));
+    }
+
+    return this.props.children;
+  };
+
+  _proto.getItemId = function getItemId(itemId, index) {
+    return itemId || this.uuid + "-" + index;
+  };
+
+  _proto.handleClick = function handleClick(itemId, open) {
+    var multipleOpen = this.props.multipleOpen;
+    this.setState(function (state) {
+      var _extends2, _ref;
+
+      return {
+        hasInteracted: true,
+        openItems: multipleOpen ? _extends({}, state.openItems, (_extends2 = {}, _extends2[itemId] = !open, _extends2)) : (_ref = {}, _ref[itemId] = !open, _ref)
+      };
+    });
+  };
+
+  _proto.render = function render() {
+    var _this2 = this;
+
+    var _this$state = this.state,
+        openItems = _this$state.openItems,
+        hasInteracted = _this$state.hasInteracted;
+    var _this$props = this.props,
+        multipleOpen = _this$props.multipleOpen,
+        titleElement = _this$props.titleElement,
+        standalone = _this$props.standalone,
+        respondAt = _this$props.respondAt;
+    var itemProps = {
+      titleElement: titleElement,
+      standalone: standalone,
+      respondAt: respondAt
+    };
+    var children = Children.map(this.getChildren(), function (child, index) {
+      var id = _this2.getItemId(child.props.id, index);
+
+      var open = openItems[id];
+
+      if (!multipleOpen && hasInteracted) {
+        open = open || false;
+      }
+
+      return React.cloneElement(child, _extends({}, itemProps, {
+        id: id,
+        open: open,
+        onClick: function onClick(isOpen) {
+          return _this2.handleClick(id, isOpen);
+        }
+      }));
+    });
+    return React.createElement(Fragment, null, children);
+  };
+
+  return Accordion;
+}(Component);
+
+Accordion.propTypes = {
+  /** Array of `AccordionItems` or body contents if `title` prop set i.e. single accordion mode */
+  children: PropTypes.node,
+
+  /** Allow multipleOpen items to be open at one time */
+  multipleOpen: PropTypes.bool,
+
+  /** Element to use as title */
+  titleElement: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+
+  /** Set to `true` to add spacing between items */
+  standalone: PropTypes.bool,
+
+  /** @see [`AccordionItem`](#/Components?id=accordion-item) */
+  title: PropTypes.node,
+
+  /** @see [`AccordionItem`](#/Components?id=accordion-item) */
+  className: PropTypes.string,
+
+  /** @see [`AccordionItem`](#/Components?id=accordion-item) */
+  defaultOpen: PropTypes.bool,
+
+  /** @see [`AccordionItem`](#/Components?id=accordion-item) */
+  open: PropTypes.bool,
+
+  /** @see [`AccordionItem`](#/Components?id=accordion-item) */
+  id: PropTypes.string,
+
+  /** @see [`AccordionItem`](#/Components?id=accordion-item) */
+  onClick: PropTypes.func,
+
+  /**
+   * @see [`AccordionItem`](#/Components?id=accordion-item)
+   * @deprecated Use `onClick`
+   * */
+  handleClick: PropTypes.func,
+
+  /** @see [`AccordionItem`](#/Components?id=accordion-item) */
+  respondAt: PropTypes.string
+};
+Accordion.defaultProps = {
+  children: undefined,
+  multipleOpen: false,
+  titleElement: undefined,
+  standalone: false,
+  title: undefined,
+  className: undefined,
+  defaultOpen: false,
+  open: undefined,
+  id: undefined,
+  onClick: undefined,
+  handleClick: undefined,
+  respondAt: undefined
 };
 Accordion.displayName = 'Accordion';
-var Accordion$1 = compose(setDisplayName('Accordion'), withState('open', 'setOpenState', function (_ref2) {
-  var defaultOpen = _ref2.defaultOpen;
-  return !!defaultOpen;
-}), withHandlers({
-  handleClick: clickHandler
-}), withPropsOnChange(function () {
-  return false;
-}, createIds))(Accordion);
 
 var Input = function Input(_ref) {
   var id = _ref.id,
@@ -317,14 +454,16 @@ Input.displayName = 'Input';
 
 var FormOption = function FormOption(_ref) {
   var label = _ref.label,
+      hideLabel = _ref.hideLabel,
       className = _ref.className,
       fullWidth = _ref.fullWidth,
+      inline = _ref.inline,
       type = _ref.type,
-      props = _objectWithoutPropertiesLoose(_ref, ["label", "className", "fullWidth", "type"]);
+      props = _objectWithoutPropertiesLoose(_ref, ["label", "hideLabel", "className", "fullWidth", "inline", "type"]);
 
   var id = props.value ? props.name + "-" + props.value : props.name;
   return React.createElement("div", {
-    className: classnames('ln-c-form-option', "ln-c-form-option--" + type, fullWidth && 'ln-c-form-option--full', className)
+    className: classnames('ln-c-form-option', "ln-c-form-option--" + type, fullWidth && 'ln-c-form-option--full', inline && 'ln-c-form-option--inline', hideLabel && 'ln-c-form-option--hide-label', className)
   }, React.createElement(Input, _extends({
     type: type,
     className: "ln-c-form-option__input"
@@ -333,22 +472,26 @@ var FormOption = function FormOption(_ref) {
   })), React.createElement("label", {
     className: "ln-c-form-option__label",
     htmlFor: id
-  }, label));
+  }, React.createElement("span", null, label)));
 };
 
 FormOption.propTypes = {
   name: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['checkbox', 'radio']),
   label: PropTypes.node,
+  hideLabel: PropTypes.bool,
   className: PropTypes.string,
   fullWidth: PropTypes.bool,
+  inline: PropTypes.bool,
   value: PropTypes.string
 };
 FormOption.defaultProps = {
   type: 'radio',
   label: undefined,
+  hideLabel: false,
   className: undefined,
   fullWidth: false,
+  inline: false,
   value: undefined
 };
 FormOption.displayName = 'FormOption';
@@ -559,27 +702,26 @@ Button.defaultProps = {
 Button.displayName = 'Button';
 
 /**
- * @see Extends [`Button`](#/Components?id=button-1) by adding relevant style `className`
- * @deprecated Use [`FilledButton`](#/Components?id=filledbutton) instead
+ * @see Extends [`Button`](#/Components/Button?id=button-1) by adding relevant style `className`
  */
 
-var PrimaryButton = function PrimaryButton(props) {
+var FilledButton = function FilledButton(props) {
   return React.createElement(Button, _extends({}, props, {
-    className: classnames('ln-c-button--primary', props.className)
+    className: classnames('ln-c-button--filled', props.className)
   }), props.children);
 };
 
-PrimaryButton.propTypes = {
+FilledButton.propTypes = {
   children: PropTypes.node.isRequired,
   className: PropTypes.string
 };
-PrimaryButton.defaultProps = {
+FilledButton.defaultProps = {
   className: undefined
 };
-PrimaryButton.displayName = 'PrimaryButton';
+FilledButton.displayName = 'FilledButton';
 
 /**
- * @see Extends [`Button`](#/Components?id=button-1) by adding relevant style `className`
+ * @see Extends [`Button`](#/Components/Button?id=button-1) by adding relevant style `className`
  */
 
 var TextButton = function TextButton(_ref) {
@@ -604,7 +746,7 @@ TextButton.defaultProps = {
 TextButton.displayName = 'TextButton';
 
 /**
- * @see Extends [`Button`](#/Components?id=button-1) by adding relevant style `className`
+ * @see Extends [`Button`](#/Components/Button?id=button-1) by adding relevant style `className`
  */
 
 var LinkButton = function LinkButton(_ref) {
@@ -627,7 +769,7 @@ LinkButton.defaultProps = {
 LinkButton.displayName = 'LinkButton';
 
 /**
- * @see Extends [`Button`](#/Components?id=button-1) by adding relevant style `className`
+ * @see Extends [`Button`](#/Components/Button?id=button-1) by adding relevant style `className`
  */
 
 var OutlinedButton = function OutlinedButton(props) {
@@ -663,8 +805,8 @@ var Cancel$1 = iconHandler(Cancel);
 
 /**
  * Helper button used primarily inside form controls that makes use of the
- * [`Cancel`](#/Icons?id=cancel) icon
- * @see Extends [`Button`](#/Components?id=button-1)
+ * [`Cancel`](#/Icons) icon
+ * @see Extends [`Button`](#/Components/Button?id=button-1)
  */
 
 var CancelButton = function CancelButton(props) {
@@ -719,9 +861,29 @@ Search.defaultProps = {
 var Search$1 = iconHandler(Search);
 
 /**
+ * @see Extends [`Button`](#/Components/Button?id=button-1) by adding relevant style `className`
+ * @deprecated Use [`FilledButton`](#/Components/Button?id=filledbutton) instead
+ */
+
+var PrimaryButton = function PrimaryButton(props) {
+  return React.createElement(Button, _extends({}, props, {
+    className: classnames('ln-c-button--primary', props.className)
+  }), props.children);
+};
+
+PrimaryButton.propTypes = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string
+};
+PrimaryButton.defaultProps = {
+  className: undefined
+};
+PrimaryButton.displayName = 'PrimaryButton';
+
+/**
  * Helper button to be used in combination with form inputs that makes use of the
- * [`Search`](#/Icons?id=search-1) icon
- * @see Extends [`Button`](#/Components?id=button-1)
+ * [`Search`](#/Icons) icon
+ * @see Extends [`Button`](#/Components/Button?id=button-1)
  */
 
 var SearchButton = function SearchButton(_ref) {
@@ -751,10 +913,177 @@ SearchButton.defaultProps = {
 };
 SearchButton.displayName = 'SearchButton';
 
+/* eslint-disable react/prefer-stateless-function */
+
+var ToggleButtonGroup =
+/*#__PURE__*/
+function (_Component) {
+  _inheritsLoose(ToggleButtonGroup, _Component);
+
+  function ToggleButtonGroup(props) {
+    var _this;
+
+    _this = _Component.call(this, props) || this;
+    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+
+  var _proto = ToggleButtonGroup.prototype;
+
+  _proto.getChildren = function getChildren(children) {
+    var _this2 = this;
+
+    var _this$props = this.props,
+        value = _this$props.value,
+        disabled = _this$props.disabled,
+        alpha = _this$props.alpha;
+    return React.Children.map(children, function (child, index) {
+      var childProps = child.props;
+      return React.cloneElement(child, {
+        index: index,
+        disabled: disabled,
+        alpha: alpha,
+        active: childProps.value === value,
+        onClick: _this2.handleClick
+      });
+    });
+  };
+
+  _proto.handleClick = function handleClick(event, value) {
+    this.props.onChange(event, value, this.props.value);
+  };
+
+  _proto.render = function render() {
+    var _this$props2 = this.props,
+        children = _this$props2.children,
+        label = _this$props2.label,
+        className = _this$props2.className,
+        alpha = _this$props2.alpha,
+        inline = _this$props2.inline;
+    return React.createElement("div", {
+      className: classnames(className, 'ln-c-toggle-button-group', alpha && 'ln-c-toggle-button-group--alpha', inline && 'ln-c-toggle-button-group--inline'),
+      role: "group",
+      "aria-label": label
+    }, this.getChildren(children));
+  };
+
+  return ToggleButtonGroup;
+}(Component);
+
+ToggleButtonGroup.displayName = 'ToggleButtonGroup';
+ToggleButtonGroup.propTypes = {
+  /** Array of `ToggleButton` components */
+  children: PropTypes.node.isRequired,
+
+  /** `aria-label` applied to the toggle button group (useful for screen readers) */
+  label: PropTypes.node,
+
+  /** The value of the item that is currently active / selected */
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+  /** On change handler */
+  onChange: PropTypes.func.isRequired,
+
+  /** Additional classes to be added to the top-level element */
+  className: PropTypes.string,
+
+  /** Displays the alpha styling variant */
+  alpha: PropTypes.bool,
+
+  /** Display using inline flex (sized to fit contents) */
+  inline: PropTypes.bool,
+
+  /** Disables all toggle button items */
+  disabled: PropTypes.bool
+};
+ToggleButtonGroup.defaultProps = {
+  label: undefined,
+  value: undefined,
+  className: undefined,
+  alpha: false,
+  inline: false,
+  disabled: false
+};
+
 /**
- * @see Extends [`Button`](#/Components?id=button-1) by adding relevant style `className`
- * @deprecated Use [`OutlinedButton`](#/Components?id=outlinedbutton) or
- * [`TextButton`](#/Components?id=textbutton) instead
+ * @see [`ToggleButtonGroup`](#/Components/Button?id=togglebuttongroup) for a demo of toggle buttons used in a group.
+ */
+
+var ToggleButton = function ToggleButton(_ref) {
+  var children = _ref.children,
+      value = _ref.value,
+      className = _ref.className,
+      alpha = _ref.alpha,
+      active = _ref.active,
+      disabled = _ref.disabled,
+      onClick = _ref.onClick,
+      element = _ref.element,
+      role = _ref.role,
+      rest = _objectWithoutPropertiesLoose(_ref, ["children", "value", "className", "alpha", "active", "disabled", "onClick", "element", "role"]);
+
+  var Item = element;
+
+  var props = _extends({}, rest, {
+    className: classnames(className, 'ln-c-toggle-button', alpha && 'ln-c-toggle-button--alpha', active && 'is-active', disabled && 'is-disabled'),
+    role: role,
+    onClick: onClick && function (event) {
+      return onClick(event, value);
+    },
+    'aria-pressed': active,
+    'aria-disabled': disabled
+  });
+
+  if (Item === 'button') {
+    props.disabled = disabled;
+    props.type = 'button';
+  }
+
+  return React.createElement(Item, props, children);
+};
+
+ToggleButton.displayName = 'ToggleButton';
+ToggleButton.propTypes = {
+  /** Content displayed by the item */
+  children: PropTypes.node.isRequired,
+
+  /** Value of the button when active */
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+
+  /** Additional classes to be added to the top-level element */
+  className: PropTypes.string,
+
+  /** Displays the alpha styling variant */
+  alpha: PropTypes.bool,
+
+  /** Is active / selected */
+  active: PropTypes.bool,
+
+  /** Is disabled */
+  disabled: PropTypes.bool,
+
+  /** On click handler */
+  onClick: PropTypes.func,
+
+  /** Allows the top-level element to be customized */
+  element: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.func]),
+
+  /** `role` attribute */
+  role: PropTypes.string
+};
+ToggleButton.defaultProps = {
+  className: undefined,
+  alpha: false,
+  active: false,
+  disabled: false,
+  onClick: undefined,
+  element: 'button',
+  role: undefined
+};
+
+/**
+ * @see Extends [`Button`](#/Components/Button?id=button-1) by adding relevant style `className`
+ * @deprecated Use [`OutlinedButton`](#/Components/Button?id=outlinedbutton) or
+ * [`TextButton`](#/Components/Button?id=textbutton) instead
  */
 
 var SecondaryButton = function SecondaryButton(props) {
@@ -1071,7 +1400,7 @@ var ListItem = function ListItem(_ref) {
 ListItem.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node.isRequired,
-  type: PropTypes.oneOf(['bare', 'inline', 'matrix'])
+  type: PropTypes.oneOf(['bare', 'inline', 'matrix', 'justified'])
 };
 ListItem.defaultProps = {
   className: undefined,
@@ -1108,7 +1437,7 @@ List.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
   items: PropTypes.arrayOf(PropTypes.node),
-  type: PropTypes.oneOf(['bare', 'inline', 'matrix']),
+  type: PropTypes.oneOf(['bare', 'inline', 'matrix', 'justified']),
   spaced: PropTypes.bool,
   ordered: PropTypes.bool
 };
@@ -1368,7 +1697,8 @@ var FormOptionField = function FormOptionField(_ref3) {
       info = _ref3.info,
       options = _ref3.options,
       optionType = _ref3.optionType,
-      props = _objectWithoutPropertiesLoose(_ref3, ["className", "required", "requiredLabel", "optional", "optionalLabel", "validationFirst", "label", "hideLabel", "error", "warning", "info", "options", "optionType"]);
+      listType = _ref3.listType,
+      props = _objectWithoutPropertiesLoose(_ref3, ["className", "required", "requiredLabel", "optional", "optionalLabel", "validationFirst", "label", "hideLabel", "error", "warning", "info", "options", "optionType", "listType"]);
 
   var requiredFlag = getRequiredFlag(required, optional);
   var describedBy = getDescribedByIds({
@@ -1400,10 +1730,10 @@ var FormOptionField = function FormOptionField(_ref3) {
     className: className,
     validationFirst: validationFirst
   }, options.length > 1 ? React.createElement(List, {
-    type: "bare"
+    type: listType
   }, options.map(function (option) {
     return React.createElement(ListItem, {
-      type: "bare",
+      type: listType,
       key: props.name + "-" + option.value
     }, React.createElement(FormOptionFieldInput, _extends({}, optionInputProps, {
       option: option,
@@ -1419,10 +1749,12 @@ var FormOptionField = function FormOptionField(_ref3) {
 
 FormOptionField.propTypes = _extends({}, propTypes, {
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
-  optionType: PropTypes.oneOf(['radio', 'checkbox'])
+  optionType: PropTypes.oneOf(['radio', 'checkbox']),
+  listType: PropTypes.string
 });
 FormOptionField.defaultProps = {
-  optionType: 'radio'
+  optionType: 'radio',
+  listType: 'bare'
 };
 FormOptionField.displayName = 'FormOptionField';
 
@@ -1543,8 +1875,9 @@ var Heading = function Heading(_ref) {
       rest = _objectWithoutPropertiesLoose(_ref, ["children", "element", "level"]);
 
   var props = {};
+  var hElement = element || "h" + level;
 
-  if (typeof element !== 'string' || !/h[1-6]/i.test(element)) {
+  if (typeof hElement !== 'string' || !/h[1-6]/i.test(hElement)) {
     props = {
       role: 'heading',
       'aria-level': level,
@@ -1553,7 +1886,7 @@ var Heading = function Heading(_ref) {
   }
 
   return React.createElement(Text, _extends({}, rest, {
-    element: element
+    element: hElement
   }, props), children);
 };
 
@@ -1564,7 +1897,7 @@ Heading.propTypes = {
 };
 Heading.defaultProps = {
   children: undefined,
-  element: 'h1',
+  element: undefined,
   level: 1
 };
 Heading.displayName = 'Heading';
@@ -2350,9 +2683,19 @@ var getOptionValue = function getOptionValue(option) {
   return option ? option.value : '';
 };
 
+var matchOperators = /[|\\{}()[\]^$+*?.]/g;
+
+var escapeStringRegExp = function escapeStringRegExp(str) {
+  if (typeof str !== 'string') {
+    throw new TypeError('Expected a string');
+  }
+
+  return str.replace(matchOperators, '\\$&');
+};
+
 var createFilter = function createFilter(inputValue, getOptionLabel) {
   return function (option) {
-    return new RegExp(inputValue, 'gi').test(getOptionLabel(option));
+    return new RegExp(escapeStringRegExp(inputValue), 'gi').test(getOptionLabel(option));
   };
 };
 
@@ -2519,12 +2862,14 @@ AutocompleteFormGroup.displayName = 'AutocompleteFormGroup';
 
 var AutocompleteField = function AutocompleteField(_ref) {
   var onSelect = _ref.onSelect,
-      props = _objectWithoutPropertiesLoose(_ref, ["onSelect"]);
+      defaultSelectedOption = _ref.defaultSelectedOption,
+      props = _objectWithoutPropertiesLoose(_ref, ["onSelect", "defaultSelectedOption"]);
 
   return React.createElement(Downshift, {
     itemToString: props.getOptionLabel,
     onChange: onSelect,
-    inputValue: props.value
+    inputValue: props.value,
+    defaultSelectedItem: defaultSelectedOption
   }, function (_ref2) {
     var getInputProps = _ref2.getInputProps,
         getItemProps = _ref2.getItemProps,
@@ -2554,12 +2899,14 @@ var AutocompleteField = function AutocompleteField(_ref) {
 AutocompleteField.propTypes = {
   getOptionLabel: PropTypes.func,
   value: PropTypes.string,
-  onSelect: PropTypes.func
+  onSelect: PropTypes.func,
+  defaultSelectedOption: PropTypes.shape({})
 };
 AutocompleteField.defaultProps = {
   getOptionLabel: getOptionLabel,
   value: undefined,
-  onSelect: undefined
+  onSelect: undefined,
+  defaultSelectedOption: undefined
 };
 AutocompleteField.displayName = 'AutocompleteField';
 
@@ -3707,7 +4054,7 @@ HeaderBody.defaultProps = {
 HeaderBody.displayName = 'HeaderBody';
 
 /**
- * @deprecated Use [`SiteLayout`](#/Components?id=sitelayout)
+ * @deprecated Use [`SiteLayout`](#/Components/SiteLayout)
  */
 
 var ColleagueLayout = function ColleagueLayout(_ref) {
@@ -3882,23 +4229,49 @@ var SELECTORS = {
   MODAL_BODY: '.ln-c-modal__body'
 };
 
-var Modal = function Modal(_ref) {
-  var children = _ref.children,
-      className = _ref.className,
-      open = _ref.open,
-      hideCloseButton = _ref.hideCloseButton,
-      handleClose = _ref.handleClose,
-      closeContainerElement = _ref.closeContainerElement,
-      setHasOverlay$$1 = _ref.setHasOverlay,
-      rest = _objectWithoutPropertiesLoose(_ref, ["children", "className", "open", "hideCloseButton", "handleClose", "closeContainerElement", "setHasOverlay"]);
+var Modal =
+/*#__PURE__*/
+function (_PureComponent) {
+  _inheritsLoose(Modal, _PureComponent);
 
-  var modalBodyEl;
-  var closeButtonEl;
-  setHasOverlay$$1(open);
+  function Modal(props) {
+    var _this;
 
-  var onClose = function onClose(e) {
-    if (e.target === closeButtonEl || hasParent(e.target, SELECTORS.CLOSE_BUTTON) || e.target !== modalBodyEl && !hasParent(e.target, SELECTORS.MODAL_BODY)) {
-      setHasOverlay$$1(false);
+    _this = _PureComponent.call(this, props) || this;
+    _this.onClose = _this.onClose.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleOverlayStateChange = _this.handleOverlayStateChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+
+  var _proto = Modal.prototype;
+
+  _proto.componentDidMount = function componentDidMount() {
+    this.handleOverlayStateChange();
+  };
+
+  _proto.componentDidUpdate = function componentDidUpdate(prevProps) {
+    var open = this.props.open;
+
+    if (prevProps.open !== open) {
+      this.handleOverlayStateChange(open);
+    }
+  };
+
+  _proto.componentWillUnmount = function componentWillUnmount() {
+    var open = this.props.open;
+
+    if (open) {
+      this.handleOverlayStateChange(false);
+    }
+  };
+
+  _proto.onClose = function onClose(e) {
+    var _this$props = this.props,
+        closeContainerElement = _this$props.closeContainerElement,
+        handleClose = _this$props.handleClose;
+
+    if (e.target === this.closeButtonEl || hasParent(e.target, SELECTORS.CLOSE_BUTTON) || e.target !== this.modalBodyEl && !hasParent(e.target, SELECTORS.MODAL_BODY)) {
+      this.handleOverlayStateChange(false);
 
       if (handleClose) {
         handleClose(e);
@@ -3912,35 +4285,57 @@ var Modal = function Modal(_ref) {
     }
   };
 
-  var overlayProps = open ? {
-    tabIndex: 0,
-    role: 'button',
-    onClick: onClose,
-    onKeyDown: onKeyPress([{
-      name: 'Space',
-      code: 32
-    }, {
-      name: 'Enter',
-      code: 13
-    }], onClose)
-  } : {};
-  return React.createElement("div", _extends({}, rest, {
-    className: classnames(className, 'ln-c-modal', {
-      'is-open': open
-    })
-  }, overlayProps), React.createElement("div", {
-    className: "ln-c-modal__body",
-    ref: function ref(el) {
-      modalBodyEl = el;
-    }
-  }, !hideCloseButton && React.createElement(CloseButton, {
-    onClick: onClose,
-    containerElement: closeContainerElement,
-    buttonRef: function buttonRef(el) {
-      closeButtonEl = el;
-    }
-  }), children));
-};
+  _proto.handleOverlayStateChange = function handleOverlayStateChange(openState) {
+    var _this$props2 = this.props,
+        setHasOverlay$$1 = _this$props2.setHasOverlay,
+        open = _this$props2.open;
+    setHasOverlay$$1(typeof openState === 'boolean' ? openState : open);
+  };
+
+  _proto.render = function render() {
+    var _this2 = this;
+
+    var _this$props3 = this.props,
+        children = _this$props3.children,
+        className = _this$props3.className,
+        open = _this$props3.open,
+        hideCloseButton = _this$props3.hideCloseButton,
+        handleClose = _this$props3.handleClose,
+        closeContainerElement = _this$props3.closeContainerElement,
+        rest = _objectWithoutPropertiesLoose(_this$props3, ["children", "className", "open", "hideCloseButton", "handleClose", "closeContainerElement"]);
+
+    var overlayProps = open ? {
+      tabIndex: 0,
+      role: 'button',
+      onClick: this.onClose,
+      onKeyDown: onKeyPress([{
+        name: 'Space',
+        code: 32
+      }, {
+        name: 'Enter',
+        code: 13
+      }], this.onClose)
+    } : {};
+    return React.createElement("div", _extends({}, filterProps(rest, ['setHasOverlay', 'handleClose']), {
+      className: classnames(className, 'ln-c-modal', {
+        'is-open': open
+      })
+    }, overlayProps), React.createElement("div", {
+      className: "ln-c-modal__body",
+      ref: function ref(el) {
+        _this2.modalBodyEl = el;
+      }
+    }, !hideCloseButton && React.createElement(CloseButton, {
+      onClick: this.onClose,
+      containerElement: closeContainerElement,
+      buttonRef: function buttonRef(el) {
+        _this2.closeButtonEl = el;
+      }
+    }), children));
+  };
+
+  return Modal;
+}(PureComponent);
 
 Modal.propTypes = {
   children: PropTypes.node.isRequired,
@@ -4091,13 +4486,14 @@ PageFooter.defaultProps = {
 PageFooter.displayName = 'PageFooter';
 
 var Pagination = function Pagination(_ref) {
-  var children = _ref.children,
+  var className = _ref.className,
+      children = _ref.children,
       label = _ref.label,
       showFirstAndLast = _ref.showFirstAndLast,
       showPages = _ref.showPages,
       fullWidth = _ref.fullWidth;
   return React.createElement("nav", {
-    className: classnames('ln-c-pagination', showFirstAndLast && 'ln-c-pagination--first-last', showPages && 'ln-c-pagination--pages', fullWidth && 'ln-c-pagination--full'),
+    className: classnames(className, 'ln-c-pagination', showFirstAndLast && 'ln-c-pagination--first-last', showPages && 'ln-c-pagination--pages', fullWidth && 'ln-c-pagination--full'),
     "aria-label": label
   }, React.createElement("ul", {
     className: "ln-c-pagination__list"
@@ -4105,6 +4501,7 @@ var Pagination = function Pagination(_ref) {
 };
 
 Pagination.propTypes = {
+  className: PropTypes.string,
   children: PropTypes.node,
   label: PropTypes.string,
   showFirstAndLast: PropTypes.bool,
@@ -4112,6 +4509,7 @@ Pagination.propTypes = {
   fullWidth: PropTypes.bool
 };
 Pagination.defaultProps = {
+  className: undefined,
   children: undefined,
   label: 'Page navigation',
   showFirstAndLast: false,
@@ -4164,6 +4562,8 @@ ChevronRight.defaultProps = {
 };
 var IconNext = iconHandler(ChevronRight);
 
+var _LINK_REL;
+
 var POSITION_FIRST_CHILD = 'first-child';
 var POSITION_LAST_CHILD = 'last-child';
 var POSITION_ONLY_CHILD = 'only-child';
@@ -4174,6 +4574,7 @@ var TYPE_FIRST = 'first';
 var TYPE_LAST = 'last';
 var TYPE_PAGE = 'page';
 var ALL_TYPES = [TYPE_PREVIOUS, TYPE_NEXT, TYPE_FIRST, TYPE_LAST, TYPE_PAGE];
+var LINK_REL = (_LINK_REL = {}, _LINK_REL[TYPE_PREVIOUS] = 'prev', _LINK_REL[TYPE_NEXT] = 'next', _LINK_REL[TYPE_FIRST] = 'first', _LINK_REL[TYPE_LAST] = 'last', _LINK_REL);
 var ELLIPSIS = '...';
 
 var PaginationItem = function PaginationItem(_ref) {
@@ -4218,7 +4619,7 @@ var PaginationItem = function PaginationItem(_ref) {
   var listItemClassName = classnames('ln-c-pagination__item', "ln-c-pagination__item--" + type, position, current && 'is-current');
   return React.createElement("li", {
     className: listItemClassName
-  }, React.createElement(Link, linkProps, children));
+  }, React.createElement(Link, filterProps(linkProps, ['page']), children));
 };
 
 PaginationItem.displayName = 'PaginationItem';
@@ -4249,16 +4650,20 @@ PaginationItem.defaultProps = {
 var _TYPES;
 var TYPES = (_TYPES = {}, _TYPES[TYPE_PREVIOUS] = {
   label: 'Previous',
-  icon: IconPrevious
+  icon: IconPrevious,
+  rel: LINK_REL[TYPE_PREVIOUS]
 }, _TYPES[TYPE_NEXT] = {
   label: 'Next',
-  icon: IconNext
+  icon: IconNext,
+  rel: LINK_REL[TYPE_NEXT]
 }, _TYPES[TYPE_FIRST] = {
   label: 'First',
-  icon: IconFirst
+  icon: IconFirst,
+  rel: LINK_REL[TYPE_FIRST]
 }, _TYPES[TYPE_LAST] = {
   label: 'Last',
-  icon: IconLast
+  icon: IconLast,
+  rel: LINK_REL[TYPE_LAST]
 }, _TYPES);
 
 var buildLabel = function buildLabel(type) {
@@ -4266,10 +4671,12 @@ var buildLabel = function buildLabel(type) {
 };
 
 var PaginationControl = function PaginationControl(props) {
-  var Icon = TYPES[props.type].icon;
+  var typeProps = TYPES[props.type];
+  var Icon = typeProps.icon;
   return React.createElement(PaginationItem, _extends({}, props, {
     type: props.type,
-    label: buildLabel(props.type)
+    label: buildLabel(props.type),
+    rel: typeProps.rel
   }), React.createElement(Icon, {
     "aria-hidden": true
   }));
@@ -4434,6 +4841,30 @@ PaginationInfo.defaultProps = {
 
 /* eslint-disable react/no-array-index-key */
 
+var getLinkRel = function getLinkRel(_ref) {
+  var page = _ref.page,
+      current = _ref.current,
+      total = _ref.total;
+
+  if (page === 1) {
+    return LINK_REL[TYPE_FIRST];
+  }
+
+  if (page === total) {
+    return LINK_REL[TYPE_LAST];
+  }
+
+  if (page === current - 1) {
+    return LINK_REL[TYPE_PREVIOUS];
+  }
+
+  if (page === current + 1) {
+    return LINK_REL[TYPE_NEXT];
+  }
+
+  return undefined;
+};
+
 var PaginationPages = function PaginationPages(props) {
   var onChange = props.onChange,
       current = props.current,
@@ -4441,9 +4872,9 @@ var PaginationPages = function PaginationPages(props) {
       createHref = props.createHref,
       element = props.element,
       range = props.range;
-  return getPages(current, total, range).map(function (_ref, index) {
-    var page = _ref.page,
-        position = _ref.position;
+  return getPages(current, total, range).map(function (_ref2, index) {
+    var page = _ref2.page,
+        position = _ref2.position;
     return page === ELLIPSIS ? React.createElement(PaginationEllipsis, {
       key: index
     }) : React.createElement(PaginationPage, {
@@ -4453,7 +4884,12 @@ var PaginationPages = function PaginationPages(props) {
       href: createHref(page),
       current: current === page,
       position: position,
-      element: element
+      element: element,
+      rel: getLinkRel({
+        page: page,
+        current: current,
+        total: total
+      })
     });
   });
 };
@@ -4472,7 +4908,8 @@ PaginationPages.defaultProps = {
 };
 
 var Pagination$1 = function Pagination$$1(_ref) {
-  var current = _ref.current,
+  var className = _ref.className,
+      current = _ref.current,
       total = _ref.total,
       onChange = _ref.onChange,
       linkElement = _ref.linkElement,
@@ -4482,6 +4919,7 @@ var Pagination$1 = function Pagination$$1(_ref) {
       pageRange = _ref.pageRange,
       fullWidth = _ref.fullWidth;
   return React.createElement(Pagination, {
+    className: className,
     showFirstAndLast: showFirstAndLast,
     showPages: showPages,
     fullWidth: fullWidth
@@ -4523,24 +4961,45 @@ var Pagination$1 = function Pagination$$1(_ref) {
 };
 
 Pagination$1.propTypes = {
+  /** Custom CSS classes */
+  className: PropTypes.string,
+
+  /** Currently selected page */
   current: PropTypes.number.isRequired,
+
+  /** Total number of pages */
   total: PropTypes.number.isRequired,
+
+  /* Called when current page number changes */
   onChange: PropTypes.func.isRequired,
+
+  /** Element to be used as link */
   linkElement: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.func]),
+
+  /** Function used to generate page link `href`s (page number passed as argument) */
   createHref: PropTypes.func,
+
+  /** Show first and last page links i.e. `|<` and `>|` */
   showFirstAndLast: PropTypes.bool,
+
+  /** Show page number buttons/links */
   showPages: PropTypes.bool,
+
+  /** Number of page buttons/links displayed each side of the current page */
   pageRange: PropTypes.number,
+
+  /** Resize to 100% width of the parent */
   fullWidth: PropTypes.bool
 };
 Pagination$1.defaultProps = {
+  className: undefined,
   linkElement: 'a',
   createHref: function createHref(page) {
     return "#" + page;
   },
   showFirstAndLast: false,
   showPages: false,
-  pageRange: 2,
+  pageRange: 1,
   fullWidth: false
 };
 Pagination$1.displayName = 'Pagination';
@@ -4622,7 +5081,7 @@ var toSize = function toSize(large, squash) {
   return undefined;
 };
 /**
- * @deprecated Use [`Container`](#/Components?id=container-1)
+ * @deprecated Use [`Container`](#/Components/Container?id=container-1)
  */
 
 
@@ -4729,6 +5188,42 @@ StatusCard.defaultProps = {
   containerElement: undefined
 };
 StatusCard.displayName = 'StatusCard';
+
+var TableContainer = function TableContainer(_ref) {
+  var _classnames;
+
+  var className = _ref.className,
+      responsive = _ref.responsive,
+      labels = _ref.labels,
+      sortable = _ref.sortable,
+      fixed = _ref.fixed,
+      children = _ref.children,
+      rest = _objectWithoutPropertiesLoose(_ref, ["className", "responsive", "labels", "sortable", "fixed", "children"]);
+
+  return React.createElement("div", _extends({}, rest, {
+    className: "ln-c-table-container"
+  }), React.createElement("table", {
+    className: classnames(className, 'ln-c-table', (_classnames = {}, _classnames["ln-c-table--responsive@" + responsive] = typeof responsive === 'string', _classnames['ln-c-table--responsive@md'] = typeof responsive !== 'string' && responsive, _classnames['ln-c-table--no-labels'] = !labels, _classnames['ln-c-table--sorted'] = sortable, _classnames['ln-c-table--fixed'] = fixed, _classnames))
+  }, children));
+};
+
+TableContainer.propTypes = {
+  className: PropTypes.string,
+  responsive: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  labels: PropTypes.bool,
+  sortable: PropTypes.bool,
+  fixed: PropTypes.bool,
+  children: PropTypes.node
+};
+TableContainer.defaultProps = {
+  className: undefined,
+  responsive: false,
+  labels: true,
+  sortable: false,
+  fixed: false,
+  children: undefined
+};
+TableContainer.displayName = 'TableContainer';
 
 var TableCaption = function TableCaption(_ref) {
   var children = _ref.children,
@@ -4888,25 +5383,37 @@ var TableCell = function TableCell(_ref) {
       label = _ref.label,
       className = _ref.className,
       align = _ref.align,
-      rest = _objectWithoutPropertiesLoose(_ref, ["children", "label", "className", "align"]);
+      lastWhenStacked = _ref.lastWhenStacked,
+      rest = _objectWithoutPropertiesLoose(_ref, ["children", "label", "className", "align", "lastWhenStacked"]);
 
   return React.createElement("td", _extends({}, rest, {
-    className: classnames(className, 'ln-c-table__cell', (_classnames = {}, _classnames["ln-c-table__cell--text-align-" + align] = align, _classnames)),
+    className: classnames(className, 'ln-c-table__cell', (_classnames = {}, _classnames["ln-c-table__cell--text-align-" + align] = align, _classnames), lastWhenStacked && 'ln-c-table__cell--last-when-stacked'),
     "data-label": label
   }), children);
 };
 
 TableCell.propTypes = {
+  /** Content to render within the cell */
   children: PropTypes.node,
+
+  /** Label associated with the cell - used when displayed in a responsive "stacked" view */
   label: PropTypes.string,
+
+  /** Add custom classes e.g. for styling purposes */
   className: PropTypes.string,
-  align: PropTypes.oneOf(['left', 'right', 'center'])
+
+  /** Horizontally aligns the table cell contents */
+  align: PropTypes.oneOf(['left', 'right', 'center']),
+
+  /** Displays at the bottom in responsive mode when "stack" view showing (e.g. on mobile) */
+  lastWhenStacked: PropTypes.bool
 };
 TableCell.defaultProps = {
   children: undefined,
   label: undefined,
   className: undefined,
-  align: undefined
+  align: undefined,
+  lastWhenStacked: false
 };
 TableCell.displayName = 'TableCell';
 
@@ -4985,10 +5492,20 @@ var buildColClassName = function buildColClassName(columns) {
     }, _extends2));
   }, {});
 };
+/**
+ * The `column` prop definition can be customised with the following options:
+ *
+ * - `renderHead`: `node` - what to display in the column heading, by default column name is displayed
+ * - `accessor`: `func` - access deeply nested data structures or apply transformations to data should follow the format `data => ({ value: data.email.toLowerCase() })`
+ * - `render`: `node` - determine how the cell contents are output, receives props defined by the `accessor` function so may contain multiple pieces of row data e.g. `props => <span><b>{props.label}</b> {props.unit}</span>`
+ * - `sort`: `string` or `func` - String value that determines what value returned by the `accessor` has alphabetical sorting applied to it, alternatively passing a function allows for custom sorting (`accessor`: `func`, `ascending`: bool) => [sort function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
+ * - `sortable`: `bool` - determines whether this column is sortable or not. Overrides top level `<Table />` prop `sortable`
+ * - `className`: `string` or `obj` - adds a custom class to the cells within that column, can provide an object (`{ th: 'header', td: 'body' }`) to have different classes for header & body cells.
+ *
+ */
+
 
 var Table = function Table(_ref2) {
-  var _classnames;
-
   var columns = _ref2.columns,
       data = _ref2.data,
       className = _ref2.className,
@@ -5007,11 +5524,12 @@ var Table = function Table(_ref2) {
   var isSortable = sortable || columns.filter(function (c) {
     return c.sortable;
   }).length > 0;
-  return React.createElement("div", _extends({}, filterProps(rest, ['setSorted']), {
-    className: "ln-c-table-container"
-  }), React.createElement("table", {
-    className: classnames(className, 'ln-c-table', (_classnames = {}, _classnames["ln-c-table--responsive@" + responsive] = typeof responsive === 'string', _classnames['ln-c-table--responsive@md'] = typeof responsive !== 'string' && responsive, _classnames['ln-c-table--no-labels'] = !labels, _classnames['ln-c-table--sorted'] = isSortable, _classnames['ln-c-table--fixed'] = fixed, _classnames))
-  }, caption && React.createElement(TableCaption, {
+  return React.createElement(TableContainer, _extends({
+    className: className,
+    responsive: responsive,
+    labels: labels,
+    sortable: sortable
+  }, filterProps(rest, ['setSorted'])), caption && React.createElement(TableCaption, {
     visuallyHidden: visuallyHiddenCaption
   }, caption), React.createElement(TableHeader, {
     sortLabel: responsive && isSortable
@@ -5045,10 +5563,11 @@ var Table = function Table(_ref2) {
         key: column.name,
         align: column.align,
         className: colClassNames[column.name].td,
-        label: responsive && labels && !column.hideLabel ? column.name : undefined
+        label: responsive && labels && !column.hideLabel ? column.name : undefined,
+        lastWhenStacked: responsive && column.lastWhenStacked
       }, column.render ? column.render(cellData) : cellData[DEFAULT_CELL_DATA_PROPERTY]);
     }));
-  }))));
+  })));
 };
 
 Table.propTypes = {
@@ -5058,7 +5577,10 @@ Table.propTypes = {
     accessor: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
     sort: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
     sortable: PropTypes.bool,
-    render: PropTypes.func
+    render: PropTypes.func,
+
+    /** Displays this cell at the bottom when stack view presented - requires top-level `responsive` prop to be enabled */
+    lastWhenStacked: PropTypes.bool
   })).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   className: PropTypes.string,
@@ -5111,14 +5633,10 @@ var TabLink = function TabLink(_ref) {
       element = _ref.element,
       containerElement = _ref.containerElement,
       onClick = _ref.onClick,
-      setRef = _ref.setRef,
       onFocus = _ref.onFocus,
-      rest = _objectWithoutPropertiesLoose(_ref, ["active", "children", "className", "element", "containerElement", "onClick", "setRef", "onFocus"]);
+      rest = _objectWithoutPropertiesLoose(_ref, ["active", "children", "className", "element", "containerElement", "onClick", "onFocus"]);
 
   var tabEl = containerElement || element;
-  var ref = setRef ? function (tabLink) {
-    setRef(tabLink);
-  } : undefined;
 
   var props = _extends({}, rest, {
     className: classnames('ln-c-tabs__link', className, {
@@ -5127,13 +5645,8 @@ var TabLink = function TabLink(_ref) {
     role: 'tab',
     'aria-selected': active,
     onClick: onClick,
-    ref: ref,
     onFocus: onFocus
   });
-
-  if (React.isValidElement(tabEl) && typeof tabEl.type === 'function') {
-    props.innerRef = ref;
-  }
 
   return React.isValidElement(tabEl) ? React.cloneElement(tabEl, props, children) : React.createElement(tabEl, props, children);
 };
@@ -5147,7 +5660,6 @@ TabLink.propTypes = {
   /** @deprecated Use `element` */
   containerElement: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   onClick: PropTypes.func,
-  setRef: PropTypes.func,
   onFocus: PropTypes.func
 };
 TabLink.defaultProps = {
@@ -5156,7 +5668,6 @@ TabLink.defaultProps = {
   element: 'button',
   containerElement: undefined,
   onClick: undefined,
-  setRef: undefined,
   onFocus: undefined
 };
 TabLink.displayName = 'TabLink';
@@ -5169,13 +5680,18 @@ var TabList = function TabList(_ref) {
       showPrevArrow = _ref.showPrevArrow,
       showNextArrow = _ref.showNextArrow,
       animateDistance = _ref.animateDistance,
-      setTabRef = _ref.setTabRef,
+      getChildren = _ref.getChildren,
       onArrowClick = _ref.onArrowClick,
       onTabLinkFocus = _ref.onTabLinkFocus,
-      rest = _objectWithoutPropertiesLoose(_ref, ["className", "children", "fill", "deep", "showPrevArrow", "showNextArrow", "animateDistance", "setTabRef", "onArrowClick", "onTabLinkFocus"]);
+      rest = _objectWithoutPropertiesLoose(_ref, ["className", "children", "fill", "deep", "showPrevArrow", "showNextArrow", "animateDistance", "getChildren", "onArrowClick", "onTabLinkFocus"]);
 
   var isResponsive = !fill && React.Children.count(children) > 1 && onArrowClick;
   var transform = isResponsive && animateDistance ? "translateX(" + animateDistance + "%)" : undefined;
+
+  if (getChildren) {
+    getChildren(children);
+  }
+
   return React.createElement("nav", _extends({}, filterProps(rest, ['visibleTabs']), {
     className: classnames('ln-c-tabs', className, {
       'ln-c-tabs--fill': fill,
@@ -5199,7 +5715,6 @@ var TabList = function TabList(_ref) {
 
     if (child.type === TabLink) {
       props.onFocus = onTabLinkFocus;
-      props.setRef = setTabRef;
     }
 
     return React.cloneElement(child, props);
@@ -5231,7 +5746,7 @@ TabList.propTypes = {
   showPrevArrow: PropTypes.bool,
   showNextArrow: PropTypes.bool,
   animateDistance: PropTypes.number,
-  setTabRef: PropTypes.func,
+  getChildren: PropTypes.func,
   onArrowClick: PropTypes.func,
   onTabLinkFocus: PropTypes.func
 };
@@ -5242,7 +5757,7 @@ TabList.defaultProps = {
   showPrevArrow: false,
   showNextArrow: false,
   animateDistance: 0,
-  setTabRef: undefined,
+  getChildren: undefined,
   onArrowClick: undefined,
   onTabLinkFocus: undefined
 };
@@ -5270,17 +5785,8 @@ var getElementDimensions = function getElementDimensions(element) {
   return element.getBoundingClientRect();
 };
 
-var findActiveTabLinkIndex = function findActiveTabLinkIndex(children) {
-  var index;
-  children.forEach(function (tab, tabIndex) {
-    if (tab.props && tab.props.active) {
-      index = tabIndex;
-    }
-  });
-  return index;
-};
-
 var ARROW_WIDTH = 48;
+var VISIBLE_TABS = 2;
 
 var Tabs =
 /*#__PURE__*/
@@ -5292,129 +5798,115 @@ function (_Component) {
 
     _this = _Component.call(this, props) || this;
     _this.state = {
-      animateDistance: 0
+      animateDistance: 0,
+      selectedIndex: 0,
+      numberOfTabs: 0,
+      remainingTabs: 0
     };
-    _this.tabs = [];
-    _this.dimensions = {};
-    _this.onArrowClick = _this.onArrowClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.onResize = _this.onResize.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.onTabLinkFocus = _this.onTabLinkFocus.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.handleResize = _this.handleResize.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleArrowClick = _this.handleArrowClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleTabLinkFocus = _this.handleTabLinkFocus.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.isResponsiveEnabled = _this.isResponsiveEnabled.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.setSelectedTab = _this.setSelectedTab.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.setTabRef = _this.setTabRef.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.setDimensions = _this.setDimensions.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.getNumberOfTabs = _this.getNumberOfTabs.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.getNumberOfRemainingTabs = _this.getNumberOfRemainingTabs.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
   var _proto = Tabs.prototype;
 
-  _proto.componentDidMount = function componentDidMount() {
-    if (this.isResponsiveEnabled()) {
-      this.handleResize();
-      window.addEventListener('resize', this.onResize);
+  _proto.getNumberOfTabs = function getNumberOfTabs(children) {
+    var _this2 = this;
+
+    var numberOfTabs = this.state.numberOfTabs;
+    var tabs = React.Children.count(children);
+
+    if (tabs !== numberOfTabs) {
+      this.setState({
+        numberOfTabs: tabs
+      }, function () {
+        _this2.setState({
+          remainingTabs: _this2.getNumberOfRemainingTabs()
+        });
+      });
     }
   };
 
-  _proto.componentWillUnmount = function componentWillUnmount() {
-    window.clearTimeout(this.resizeTimer);
-    window.removeEventListener('resize', this.onResize);
-  };
-
-  _proto.onArrowClick = function onArrowClick(next) {
-    var modifier = next ? 1 : -1;
-    this.setSelectedTab(this.state.selectedIndex + modifier);
-  };
-
-  _proto.onResize = function onResize() {
-    window.clearTimeout(this.resizeTimer);
-    this.resizeTimer = window.setTimeout(this.handleResize, 250);
-  };
-
-  _proto.onTabLinkFocus = function onTabLinkFocus(e) {
-    if (this.state.selectedIndex !== undefined) {
-      var _getElementDimensions = getElementDimensions(e.target),
-          x = _getElementDimensions.x,
-          width = _getElementDimensions.width;
-
-      if (x + width >= this.dimensions.wrapper.width) {
-        this.setSelectedTab(this.state.selectedIndex + 1);
-      } else if (x + width <= this.dimensions.wrapper.x + ARROW_WIDTH) {
-        this.setSelectedTab(this.state.selectedIndex - 1);
-      }
-    }
-  };
-
-  _proto.setTabRef = function setTabRef(tab) {
-    if (!!tab && typeof Element !== 'undefined' && tab instanceof Element && !includes(this.tabs, tab)) {
-      this.tabs.push(tab);
-    }
-  };
-
-  _proto.setDimensions = function setDimensions() {
-    this.dimensions.wrapper = getElementDimensions(this.wrapper);
-
-    if (this.state.selectedIndex === undefined) {
-      this.dimensions.lastTab = getElementDimensions(this.tabs[this.tabs.length - 1]);
-    }
+  _proto.getNumberOfRemainingTabs = function getNumberOfRemainingTabs() {
+    var _this$state = this.state,
+        numberOfTabs = _this$state.numberOfTabs,
+        selectedIndex = _this$state.selectedIndex;
+    return numberOfTabs - (selectedIndex + 1) * VISIBLE_TABS;
   };
 
   _proto.setSelectedTab = function setSelectedTab(selectedIndex) {
-    var _this2 = this;
+    var _this3 = this;
 
-    var visibleTabs = this.props.visibleTabs;
-    var remainingTabs = selectedIndex !== undefined ? this.tabs.length - (selectedIndex + 1) * visibleTabs : undefined;
     this.setState({
-      selectedIndex: selectedIndex,
-      remainingTabs: remainingTabs
+      selectedIndex: selectedIndex
     }, function () {
-      _this2.setState({
-        animateDistance: getAnimateDistance(selectedIndex, remainingTabs, visibleTabs)
+      var remainingTabs = _this3.getNumberOfRemainingTabs();
+
+      _this3.setState({
+        remainingTabs: remainingTabs,
+        animateDistance: getAnimateDistance(selectedIndex, remainingTabs, VISIBLE_TABS)
       });
     });
   };
 
   _proto.isResponsiveEnabled = function isResponsiveEnabled() {
-    return !this.props.fill && this.tabs.length > this.props.visibleTabs;
+    var numberOfTabs = this.state.numberOfTabs;
+    var fill = this.props.fill;
+    return !fill && numberOfTabs > VISIBLE_TABS;
   };
 
-  _proto.handleResize = function handleResize() {
-    this.setDimensions();
+  _proto.handleArrowClick = function handleArrowClick(next) {
+    var modifier = next ? 1 : -1;
+    this.setSelectedTab(this.state.selectedIndex + modifier);
+  };
 
-    if (this.dimensions.wrapper.right < this.dimensions.lastTab.right) {
-      var activeIndex = findActiveTabLinkIndex(this.props.children) || 0;
-      if (activeIndex > 0) activeIndex = Math.floor(activeIndex / this.props.visibleTabs);
-      this.setSelectedTab(activeIndex);
-    } else {
-      this.setSelectedTab(undefined);
+  _proto.handleTabLinkFocus = function handleTabLinkFocus(e) {
+    if (this.isResponsiveEnabled()) {
+      var _getElementDimensions = getElementDimensions(this.wrapper),
+          wrapperX = _getElementDimensions.x,
+          wrapperWidth = _getElementDimensions.width;
+
+      var _getElementDimensions2 = getElementDimensions(e.target),
+          focussedX = _getElementDimensions2.x,
+          focussedWidth = _getElementDimensions2.width;
+
+      if (focussedX + focussedWidth >= wrapperX + wrapperWidth) {
+        this.setSelectedTab(this.state.selectedIndex + 1);
+      } else if (focussedX + focussedWidth <= wrapperX + ARROW_WIDTH) {
+        this.setSelectedTab(this.state.selectedIndex - 1);
+      }
     }
   };
 
   _proto.render = function render() {
-    var _this3 = this;
+    var _this4 = this;
 
-    var _this$state = this.state,
-        selectedIndex = _this$state.selectedIndex,
-        remainingTabs = _this$state.remainingTabs,
-        animateDistance = _this$state.animateDistance;
+    var _this$state2 = this.state,
+        selectedIndex = _this$state2.selectedIndex,
+        remainingTabs = _this$state2.remainingTabs,
+        animateDistance = _this$state2.animateDistance;
     var responsiveProps = {};
 
     if (this.isResponsiveEnabled()) {
       responsiveProps = {
-        showNextArrow: selectedIndex !== undefined && remainingTabs > 0,
-        showPrevArrow: selectedIndex !== undefined && selectedIndex > 0,
+        showNextArrow: remainingTabs > 0,
+        showPrevArrow: selectedIndex > 0,
         animateDistance: animateDistance
       };
     }
 
     return React.createElement("div", {
       ref: function ref(wrapper) {
-        _this3.wrapper = wrapper;
+        _this4.wrapper = wrapper;
       }
     }, React.createElement(TabList, _extends({
-      setTabRef: this.setTabRef,
-      onArrowClick: this.onArrowClick,
-      onTabLinkFocus: this.onTabLinkFocus
+      onArrowClick: this.handleArrowClick,
+      onTabLinkFocus: this.handleTabLinkFocus,
+      getChildren: this.getNumberOfTabs
     }, responsiveProps, this.props)));
   };
 
@@ -5423,12 +5915,10 @@ function (_Component) {
 
 Tabs.propTypes = {
   children: PropTypes.node.isRequired,
-  fill: PropTypes.bool,
-  visibleTabs: PropTypes.number
+  fill: PropTypes.bool
 };
 Tabs.defaultProps = {
-  fill: false,
-  visibleTabs: 2
+  fill: false
 };
 Tabs.displayName = 'Tabs';
 
@@ -5463,4 +5953,5 @@ TabPanel.defaultProps = {
 };
 TabPanel.displayName = 'TabPanel';
 
-export { Accordion$1 as Accordion, Accordion as AccordionComponent, AutocompleteField, MultiAutocompleteField, AsyncAutocompleteField, Breadcrumbs, BreadcrumbsWrapper, BreadcrumbsItem, Button, PrimaryButton as FilledButton, TextButton, LinkButton, OutlinedButton, CancelButton, CloseButton, SearchButton, PrimaryButton, SecondaryButton, ButtonGroup, ButtonGroupWrapper, ButtonGroupPrimary, ButtonGroupSecondary, Card, ColleagueLayout, HeaderBody as MainSection, Container, Flag, FlagWrapper, FlagBody, FlagComponent, Footer, CheckboxField, FieldInfo, Fieldset, Form, FormGroup, Label, LabelInfo, Legend, PasswordField, RadioButtonField, SearchField, SelectField, TextAreaField, TextInputField, withClear, Grid, GridWrapper, GridItem, Header$1 as Header, Header as HeaderComponent, HeaderBody, IconNavigation, MainBar, TopBar, Checkbox, FormOption, Input, InputAction, InputButton, InputControl, InputGroup, InputIcon, Password$1 as Password, Password as PasswordComponent, RadioButton, SearchInput, Select, TextArea, TextInput, List, ListItem, LoadingIndicator, LoadingIcon, Modal, Navigation$1 as Navigation, NavigationWrapper, Navigation as NavigationList, MenuButton, NavigationDropdown$1 as NavigationDropdown, NavigationDropdown as NavigationDropdownComponent, Notification, NotificationList, NotificationItem, Page, PageBody, PageHeader, PageFooter, Pagination as PaginationNav, PaginationPrevious, PaginationNext, PaginationFirst, PaginationLast, PaginationPage, PaginationEllipsis, PaginationInfo, Pagination$1 as Pagination, Search$3 as Search, Search$2 as SearchComponent, Section, SiteLayout, SiteWrap, StatusCard, Table$1 as Table, Table as TableComponent, TableBody, TableCaption, TableCell, TableHeader, TableHeaderCell, TableHeaderRow, TableRow, Tabs, TabList, TabLink, TabPanel, Text, Heading, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Caption, Body1, Body2, ButtonText, Display1, Display2, Display3, Display4, Display5, Display6, Display7 };
+export { Accordion, AccordionItem, AutocompleteField, MultiAutocompleteField, AsyncAutocompleteField, Breadcrumbs, BreadcrumbsWrapper, BreadcrumbsItem, Button, FilledButton, TextButton, LinkButton, OutlinedButton, CancelButton, CloseButton, SearchButton, ToggleButtonGroup, ToggleButton, PrimaryButton, SecondaryButton, ButtonGroup, ButtonGroupWrapper, ButtonGroupPrimary, ButtonGroupSecondary, Card, ColleagueLayout, HeaderBody as MainSection, Container, Flag, FlagWrapper, FlagBody, FlagComponent, Footer, CheckboxField, FieldInfo, Fieldset, Form, FormGroup, Label, LabelInfo, Legend, PasswordField, RadioButtonField, SearchField, SelectField, TextAreaField, TextInputField, withClear, Grid, GridWrapper, GridItem, Header$1 as Header, Header as HeaderComponent, HeaderBody, IconNavigation, MainBar, TopBar, Checkbox, FormOption, Input, InputAction, InputButton, InputControl, InputGroup, InputIcon, Password$1 as Password, Password as PasswordComponent, RadioButton, SearchInput, Select, TextArea, TextInput, List, ListItem, LoadingIndicator, LoadingIcon, Modal, Navigation$1 as Navigation, NavigationWrapper, Navigation as NavigationList, MenuButton, NavigationDropdown$1 as NavigationDropdown, NavigationDropdown as NavigationDropdownComponent, Notification, NotificationList, NotificationItem, Page, PageBody, PageHeader, PageFooter, Pagination as PaginationNav, PaginationPrevious, PaginationNext, PaginationFirst, PaginationLast, PaginationPage, PaginationEllipsis, PaginationInfo, Pagination$1 as Pagination, Search$3 as Search, Search$2 as SearchComponent, Section, SiteLayout, SiteWrap, StatusCard, Table$1 as Table, Table as TableComponent, TableContainer, TableBody, TableCaption, TableCell, TableHeader, TableHeaderCell, TableHeaderRow, TableRow, Tabs, TabList, TabLink, TabPanel, Text, Heading, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Caption, Body1, Body2, ButtonText, Display1, Display2, Display3, Display4, Display5, Display6, Display7 };
+//# sourceMappingURL=index.js.map

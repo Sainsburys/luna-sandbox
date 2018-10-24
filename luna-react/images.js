@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 var Argos = function Argos(props) {
   return React.createElement("svg", props, React.createElement("title", null, "Argos"), React.createElement("g", {
@@ -3120,4 +3121,59 @@ Tu.defaultProps = {
   role: "img"
 };
 
-export { Argos, Habitat, Nectar, Sainsburys, SainsburysBank, SainsburysLwfl, Tu };
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+var withLabel = function withLabel(WrappedImage) {
+  /* istanbul ignore next */
+  var WithLabel = function WithLabel(_ref) {
+    var label = _ref.label,
+        rest = _objectWithoutPropertiesLoose(_ref, ["label"]);
+
+    return React.createElement("span", {
+      role: "img",
+      "aria-label": label
+    }, React.createElement(WrappedImage, _extends({}, rest, {
+      "aria-hidden": true
+    })));
+  };
+
+  WithLabel.propTypes = {
+    label: PropTypes.string.isRequired
+  };
+  WithLabel.displayName = 'WithLabel';
+  return WithLabel;
+};
+
+export { Argos, Habitat, Nectar, Sainsburys, SainsburysBank, SainsburysLwfl, Tu, withLabel };
+//# sourceMappingURL=index.js.map

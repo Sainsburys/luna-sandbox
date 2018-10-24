@@ -22,18 +22,18 @@ function _extends() {
 
 var addLunaClass = function addLunaClass(props) {
   return _extends({}, props, {
-    className: classnames(props.className, 'ln-c-icon', props.fixed && 'ln-c-icon--fixed'),
+    className: classnames(props.className, 'ln-c-icon', props.fixed && 'ln-c-icon--fixed', props.size && "ln-c-icon--" + props.size),
     fixed: undefined
   });
 };
 var iconHandler = (
-  /* istanbul ignore next */
-  function (Component) {
-    return (
-      /* istanbul ignore next */
-      compose(setDisplayName(Component.displayName || Component.name || 'Icon'), mapProps(addLunaClass))(Component)
-    );
-  });
+/* istanbul ignore next */
+function (Component) {
+  return (
+    /* istanbul ignore next */
+    compose(setDisplayName(Component.displayName || Component.name || 'Icon'), mapProps(addLunaClass))(Component)
+  );
+});
 
 var Accessibility = function Accessibility(props) {
   return React.createElement("svg", props, React.createElement("g", {
@@ -1087,3 +1087,4 @@ ZoomOut.defaultProps = {
 var ZoomOut$1 = iconHandler(ZoomOut);
 
 export { Accessibility$1 as Accessibility, Account$1 as Account, ArrowDown$1 as ArrowDown, ArrowLeft$1 as ArrowLeft, ArrowRight$1 as ArrowRight, ArrowUp$1 as ArrowUp, ArrowUpDown$1 as ArrowUpDown, AwardWinning$1 as AwardWinning, Bag$1 as Bag, Basket$1 as Basket, Calendar$1 as Calendar, Cancel$1 as Cancel, ChevronLeft$1 as ChevronLeft, ChevronRight$1 as ChevronRight, ClickAndCollect, Comment$1 as Comment, Delete$1 as Delete, Delivery$1 as Delivery, Dislike$1 as Dislike, Download$1 as Download, Edit$1 as Edit, Favourites$1 as Favourites, FirstPage$1 as FirstPage, Freshness$1 as Freshness, Geolocation$1 as Geolocation, GridView$1 as GridView, Home$1 as Home, Info$1 as Info, LandlinePhone$1 as LandlinePhone, LastPage$1 as LastPage, Like$1 as Like, List$1 as List, ListView$1 as ListView, Measurement$1 as Measurement, Menu$1 as Menu, Messages$1 as Messages, Minus$1 as Minus, MobilePhone$1 as MobilePhone, More$1 as More, NewWindow$1 as NewWindow, Nfc$1 as Nfc, Notification$1 as Notification, OverflowMenu$1 as OverflowMenu, Plus$1 as Plus, Print$1 as Print, Recipe$1 as Recipe, Scan$1 as Scan, Search$1 as Search, Settings$1 as Settings, StoreLocation$1 as StoreLocation, StoreLocation1$1 as StoreLocation1, StoreLocation10$1 as StoreLocation10, Tick$1 as Tick, Time$1 as Time, Trolley$1 as Trolley, Upload$1 as Upload, VoiceSearch$1 as VoiceSearch, ZoomIn$1 as ZoomIn, ZoomOut$1 as ZoomOut };
+//# sourceMappingURL=index.js.map

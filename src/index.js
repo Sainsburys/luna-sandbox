@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import { Container, Card, PrimaryButton } from '../luna-react'
 import { Favourites } from '../luna-react/icons'
 
-import './index.scss'
+// import './index.scss'
 
 function App() {
   return (
