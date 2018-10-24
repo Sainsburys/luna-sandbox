@@ -1,24 +1,31 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from "react";
+import ReactDOM from "react-dom";
 
 import {
-  Container, Card, PrimaryButton,
-  TableContainer, TableHeader, TableHeaderRow, TableHeaderCell, TableBody, TableRow, TableCell
-} from '../luna-react'
-import { Favourites } from '../luna-react/icons'
+  Container,
+  Card,
+  PrimaryButton,
+  TableContainer,
+  TableHeader,
+  TableHeaderRow,
+  TableHeaderCell,
+  TableBody,
+  TableRow,
+  TableCell
+} from "../luna-react";
+import { Favourites } from "../luna-react/icons";
 
 function App() {
   return (
-    <Container soft className="ln-u-soft-top" style={{ maxWidth: '600px', textAlign: 'center' }}>
+    <Container
+      soft
+      className="ln-u-soft-top"
+      style={{ maxWidth: "600px", textAlign: "center" }}
+    >
       <Card padded>
-        <h1 className="ln-u-color-alpha">
-          Welcome to Luna!
-        </h1>
-        <PrimaryButton
-          className="ln-u-push-bottom"
-          onClick={() => alert('🎉')}
-        >
-          <Favourites className="ln-u-margin-right"/> Tada!
+        <h1 className="ln-u-color-alpha">Welcome to Luna!</h1>
+        <PrimaryButton className="ln-u-push-bottom" onClick={() => alert("🎉")}>
+          <Favourites className="ln-u-margin-right" /> Tada!
         </PrimaryButton>
         <TableContainer className="ln-u-push-bottom">
           <TableHeader>
@@ -38,14 +45,19 @@ function App() {
             </TableRow>
           </TableBody>
         </TableContainer>
+        <p>Fork this sandbox if you want to try out Luna for yourself.</p>
         <p>
-          Fork this sandbox if you want to try out Luna for yourself.
+          Browse the{" "}
+          <a target="_blank" href="https://jsainsburyplc.github.io/luna-react/">
+            documentation
+          </a>{" "}
+          to see what components are available and information on how to
+          configure these.
         </p>
-        <p>Browse the <a target="_blank" href="https://jsainsburyplc.github.io/luna-react/">documentation</a> to see what components are available and information on how to configure these.</p>
       </Card>
     </Container>
-  )
+  );
 }
 
-const rootElement = document.getElementById('root')
-ReactDOM.render(<App />, rootElement)
+const rootElement = document.getElementById("root");
+ReactDOM.render(<App />, rootElement);
